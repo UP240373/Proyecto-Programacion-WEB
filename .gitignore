@@ -1,0 +1,8 @@
+
+# main
+.env
+
+# backend
+backend/node_modules/
+
+# frontend

@@ -1,0 +1,20 @@
+{
+  "name": "Project-U3",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.tsx",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "project": "npm run backend",
+    "backend": "node backend/setpoints.js",
+    "frontend": ""
+  },
+  "keywords": [],
+  "author": "Abdul Gerardo Martinez Campos",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1"
+  }
+}
