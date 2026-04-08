@@ -13,7 +13,23 @@ app.use(express.json());
 
   SETPOINTS
 
+  GET /users = Obtener todos los usuarios
+
+
 */
+
+// GET /users = Obtener todos los usuarios
+app.get('/users', (req, res) => {
+  const query = `SELECT * FROM users`;
+
+  db.query(query, (err, users) => {
+    if (err) {
+      return res.status(500).json({ error: "Not found connection with the base data", err});
+    }
+
+    res.status(200).json({ message: "Get information successfully.", users});
+  })
+})
 
 
 // Iniciar servidor
