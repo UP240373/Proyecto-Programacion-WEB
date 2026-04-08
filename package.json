@@ -5,9 +5,9 @@
   "main": "index.tsx",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "project": "npm run backend",
+    "project": "concurrently \"npm run frontend\" \"npm run backend\"",
     "backend": "node backend/setpoints.js",
-    "frontend": ""
+    "frontend": "cd frontend && npm run dev"
   },
   "keywords": [],
   "author": "Abdul Gerardo Martinez Campos",
@@ -16,5 +16,8 @@
   "dependencies": {
     "dotenv": "^17.4.1",
     "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }
