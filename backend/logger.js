@@ -177,6 +177,74 @@ const logger = {
     });
   },
 
+  // GET /types
+  getAllTypes: (typesCount, ip, userAgent) => {
+    writeLog('types_get_all', {
+      action: 'GET_ALL_TYPES',
+      typesCount,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /types/{id}
+  getTypeById: (typeId, found, ip, userAgent) => {
+    writeLog('types_get_by_id', {
+      action: 'GET_TYPES_BY_ID',
+      typeId,
+      found, // true/false
+      ip,
+      userAgent
+    });
+  },
+
+  // POST /types
+  createType: (typeData, newTypeId, ip, userAgent) => {
+    writeLog('types_create', {
+      action: 'CREATE_TYPE',
+      typeData,
+      newTypeId,
+      ip,
+      userAgent
+    });
+  },
+
+  // PUT /types/{id}
+  updateType: (typeId, updatedData, ip, userAgent) => {
+    writeLog('types_update', {
+      action: 'UPDATE_TYPE',
+      typeId,
+      updatedData,
+      ip,
+      userAgent
+    });
+  },
+
+  // DELETE /types/{id}
+  deleteType: (typeId, deletedTypeData, ip, userAgent) => {
+    writeLog('types_delete', {
+      action: 'DELETE_TYPE',
+      typeId,
+      deletedTypeData: {
+        id: deletedTypeData?.id,
+        name: deletedTypeData?.name,
+        code: deletedTypeData?.code
+      },
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /categories
+  getAllCategories: (categoriesCount, ip, userAgent) => {
+    writeLog('categories_get_all', {
+      action: 'GET_ALL_CATEGORIES',
+      categoriesCount,
+      ip,
+      userAgent
+    });
+  },
+
   // Error general
   error: (endpoint, error, ip) => {
     writeLog('users_error', {

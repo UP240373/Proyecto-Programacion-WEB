@@ -57,3 +57,10 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - POST /careers = Crear carrera
  - PUT /careers/{id} = Actualizar carrera
  - DELETE /careers/{id} = Eliminar carrera
+
+3. Metodos para types y categories:
+ - GET /types = Obtener tipos de ticket
+ - POST /types = Crear tipo de ticket
+ - PUT /types/{id} = Actualizar tipo
+ - DELETE /types/{id} = Eliminar tipo
+ - GET /categories = Obtener categorías

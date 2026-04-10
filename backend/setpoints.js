@@ -38,6 +38,13 @@ app.use(cors({
   PUT /careers/{id} = Actualizar carrera
   DELETE /careers/{id} = Eliminar carrera
 
+  Metodos para types y categories:
+  GET /types = Obtener tipos de ticket
+  POST /types = Crear tipo de ticket
+  PUT /types/{id} = Actualizar tipo
+  DELETE /types/{id} = Eliminar tipo
+  GET /categories = Obtener categorías
+
 */
 
 // GET /users = Obtener todos los usuarios
@@ -345,6 +352,116 @@ app.delete('/careers/:id', (req, res) => {
       logger.deleteCareer(req.params.id, careerToDelete, req.ip, req.headers['career-agent']);
       res.status(200).json({ message: "The career has been deleted." });
     });
+  });
+});
+
+// GET /types = Obtener tipos de ticket
+app.get('/types', (req, res) => {
+  const query = `SELECT * FROM types WHERE is_deleted = 0`;
+
+  db.query(query, (err, types) => {
+    if (err) {
+      logger.error('GET_ALL_TYPES', err, req.ip);
+      return res.status(500).json({ error: "Database error", err});
+    }
+    logger.getAllTypes(types.length, req.ip, req.headers['type-agent']);
+    res.status(200).json({ message: "Get information successfully", types});
+  });
+});
+
+// POST /types = Crear tipo de ticket
+app.post('/types', (req, res) => {
+  const { type, description, area } = req.body;
+
+  const filter = `SELECT * FROM types WHERE type = "${type}"`;
+  db.query(filter, (err, result) => {
+    if (err) {
+      logger.error('CREATE_TYPE', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (result.length > 0) {
+      logger.getTypeById(req.params.id, false, req.ip, req.headers['type-agent']);
+      return res.status(409).json({ err: "The type already exists"});
+    }
+
+    const query = `INSERT INTO types (type, description, area, is_deleted) VALUES ("${type}", "${description}", "${area}", 0);`;
+    db.query(query, (err, user) => {
+      if (err) {
+        logger.error('CREATE_TYPE', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+
+      logger.createType(req.body, req.body.id, req.ip, req.headers['type-agent']);
+      res.status(201).json({ message: "The type has been created successfully" });
+    })
+  });
+});
+
+// PUT /types/{id} = Actualizar tipo
+app.put('/types/:id', (req, res) => {
+  const search = `SELECT * FROM types WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, type) => {
+    if (err) {
+      logger.error('UPDATE_TYPE', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (type.length === 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['type-agent']);
+      return res.status(404).json({ error: "The user doesn't exists" });
+    }
+
+    const newChanges = req.body;
+    const query = `UPDATE types SET type = "${newChanges.type}", description = "${newChanges.description}", area = "${newChanges.area}" WHERE id = ${req.params.id}`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('UPDATE_TYPE', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.updateType(req.params.id, req.body, req.ip, req.headers['type-agent']);
+      res.status(200).json({ message: "The type has been updated" });
+    });
+  });
+});
+
+// DELETE /types/{id} = Eliminar tipo
+app.delete('/types/:id', (req, res) => {
+  const search = `SELECT * FROM types WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, type) => {
+    if (err) {
+      logger.error('DELETE_TYPE', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (type.length === 0) {
+      logger.getTypeById(req.params.id, false, req.ip, req.headers['type-agent']);
+      return res.status(404).json({ error: "The career doesn't exists" });
+    }
+
+    const query = `UPDATE types SET is_deleted = 1 WHERE id = ${req.params.id}`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('DELETE_TYPE', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.deleteType(req.params.id, result, req.ip, req.headers['type-agent']);
+      res.status(200).json({ message: "The type has been deleted." });
+    });
+  });
+});
+
+// GET /categories = Obtener categorías
+app.get('/categories', (req, res) => {
+  const query = `SELECT * FROM categories`;
+
+  db.query(query, (err, categories) => {
+    if (err) {
+      logger.error('GET_ALL_CATEGORIES', err, req.ip);
+      return res.status(500).json({ error: "Database error", err});
+    }
+    logger.getAllCategories(categories.length, req.ip, req.headers['categorie-agent']);
+    res.status(200).json({ message: "Get information successfully", categories});
   });
 });
 
