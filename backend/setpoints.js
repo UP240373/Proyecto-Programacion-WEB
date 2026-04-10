@@ -1,6 +1,7 @@
 // Exportar variables de entorno, express y la base de datos
 const express = require("express");
 const cors = require('cors');
+const logger = require('./logger');
 const db = require("./db");
 
 // Configuracion de la app
@@ -38,9 +39,10 @@ app.get('/users', (req, res) => {
 
   db.query(query, (err, users) => {
     if (err) {
+      logger.error('GET_ALL_USERS', err, req.ip);
       return res.status(500).json({ error: "Database error", err});
     }
-
+    logger.getAllUsers(users.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", users});
   });
 });
@@ -48,7 +50,7 @@ app.get('/users', (req, res) => {
 // GET /users/filter = Filtrar usuarios
 app.get('/users/filter', (req, res) => {
   const { name, email, career_id, rol } = req.query;
-  
+
   let query = 'SELECT * FROM users WHERE is_deleted = 0';
 
   if (name) {
@@ -69,30 +71,37 @@ app.get('/users/filter', (req, res) => {
   
   db.query(query, (err, users) => {
     if (err) {
+      logger.error('FILTER_USERS', err, req.ip);
       return res.status(500).json({ error: "Database error", err });
     }
 
     if (users.length === 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "User don't found"});
     }
 
+    logger.filterUsers({ name, email, career_id, rol }, users.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Success", users });
   });
 });
 
-// POST /users = Crear usuario
+// GET /users/{id} = Obtener usuario por ID
 app.get('/users/:id', (req, res) => {
   const query = `SELECT * FROM users WHERE id = ${req.params.id} AND is_deleted = 0`;
 
   db.query(query, (err, user) => {
     if (err) {
+      logger.error('GET_USER_BY_ID', err, req.ip);
       return res.status(500).json({ error: "Database error", err });
     }
 
     if (user.length === 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The user doesn't exists" });
     }
 
+    const found = user.length > 0;
+    logger.getUserById(req.params.id, found, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get user successfully", user});
   });
 });
@@ -104,18 +113,23 @@ app.post('/users', (req, res) => {
   const filter = `SELECT * FROM users WHERE email = "${email}" OR username = "${username}"`;
   db.query(filter, (err, result) => {
     if (err) {
+      logger.error('CREATE_USER', err, req.ip);
       return res.status(500).json({ error: "Database error", err });
     }
 
     if (result.length > 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(409).json({ err: "The username or email already exists"});
     }
 
     const query = `INSERT INTO users (name, last_name, username, email, career_id, active, password, rol, failed_attempts, is_deleted) VALUES ("${name}", "${last_name}", "${username}", "${email}", ${career_id}, ${active}, "${password}", "${rol}", ${failed_attempts}, 0);`;
     db.query(query, (err, user) => {
       if (err) {
+        logger.error('CREATE_USER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
+
+      logger.createUser(req.body, req.body.id, req.ip, req.headers['user-agent']);
       res.status(201).json({ message: "The user has been created successfully" });
     })
   });
@@ -126,10 +140,12 @@ app.patch('/users/:id/status', (req, res) => {
   const search = `SELECT * FROM users WHERE id = ${req.params.id} AND is_deleted = 0`;
   db.query(search, (err, user) => {
     if (err) {
+      logger.error('UPDATE_USER_STATUS', err, req.ip);
       return res.status(500).json({ error: "Database error", err });
     }
 
     if (user.length === 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The user doesn't exists" });
     }
 
@@ -137,8 +153,10 @@ app.patch('/users/:id/status', (req, res) => {
     const query = `UPDATE users SET active = ${newStatus} WHERE id = ${req.params.id};`
     db.query(query, (err, result) => {
       if (err) {
+        logger.error('UPDATE_USER_STATUS', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The user's status has been updated" });
     });
   });
@@ -149,10 +167,12 @@ app.put('/users/:id', (req, res) => {
   const search = `SELECT * FROM users WHERE id = ${req.params.id} AND is_deleted = 0`;
   db.query(search, (err, user) => {
     if (err) {
+      logger.error('UPDATE_USER', err, req.ip);
       return res.status(500).json({ error: "Database error", err });
     }
 
     if (user.length === 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The user doesn't exists" });
     }
 
@@ -160,8 +180,10 @@ app.put('/users/:id', (req, res) => {
     const query = `UPDATE users SET name = "${newChanges.name}", last_name = "${newChanges.last_name}", username = "${newChanges.username}", email = "${newChanges.email}", career_id = ${newChanges.career_id}, active = ${newChanges.active}, password = "${newChanges.password}", rol = "${newChanges.rol}" WHERE id = ${req.params.id}`;
     db.query(query, (err, result) => {
       if (err) {
+        logger.error('UPDATE_USER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
+      logger.updateUser(req.params.id, req.body, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The user has been updated" });
     });
   });
@@ -172,18 +194,22 @@ app.delete('/users/:id', (req, res) => {
   const search = `SELECT * FROM users WHERE id = ${req.params.id} AND is_deleted = 0`;
   db.query(search, (err, user) => {
     if (err) {
+      logger.error('DELETE_USER', err, req.ip);
       return res.status(500).json({ error: "Database error", err });
     }
 
     if (user.length === 0) {
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The user doesn't exists" });
     }
 
     const query = `UPDATE users SET is_deleted = 1 WHERE id = ${req.params.id}`;
     db.query(query, (err, result) => {
       if (err) {
+        logger.error('DELETE_USER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
+      logger.deleteUser(req.params.id, userToDelete, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The user has been deleted." });
     });
   });
