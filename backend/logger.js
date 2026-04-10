@@ -245,6 +245,109 @@ const logger = {
     });
   },
 
+  // GET /tickets
+  getAllTickets: (ticketsCount, ip, userAgent) => {
+    writeLog('tickets_get_all', {
+      action: 'GET_ALL_TICKETS',
+      ticketsCount,
+      ip,
+      userAgent
+    });
+  },
+
+  // POST /tickets
+  createTicket: (ticketData, newTicketId, ip, userAgent) => {
+    writeLog('tickets_create', {
+      action: 'CREATE_TICKET',
+      ticketData,
+      newTicketId,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /tickets/{id}
+  getTicketById: (ticketId, found, ip, userAgent) => {
+    writeLog('tickets_get_by_id', {
+      action: 'GET_TICKET_BY_ID',
+      ticketId,
+      found,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /tickets/filter
+  filterTickets: (filters, resultCount, ip, userAgent) => {
+    writeLog('tickets_filter', {
+      action: 'FILTER_TICKETS',
+      filters,
+      resultCount,
+      ip,
+      userAgent
+    });
+  },
+
+  // PUT /tickets/{id}
+  updateTicket: (ticketId, updatedData, ip, userAgent) => {
+    writeLog('tickets_update', {
+      action: 'UPDATE_TICKET',
+      ticketId,
+      updatedData,
+      ip,
+      userAgent
+    });
+  },
+
+  // PATCH /tickets/{id}/status
+  updateTicketStatus: (ticketId, oldStatus, newStatus, ip, userAgent) => {
+    writeLog('tickets_status', {
+      action: 'UPDATE_TICKET_STATUS',
+      ticketId,
+      oldStatus,
+      newStatus,
+      ip,
+      userAgent
+    });
+  },
+
+  // DELETE /tickets/{id}
+  deleteTicket: (ticketId, deletedTicketData, ip, userAgent) => {
+    writeLog('tickets_delete', {
+      action: 'DELETE_TICKET',
+      ticketId,
+      deletedTicketData: {
+        id: deletedTicketData?.id,
+        title: deletedTicketData?.title,
+        status: deletedTicketData?.status
+      },
+      ip,
+      userAgent
+    });
+  },
+
+  // POST /tickets/assign
+  assignTicket: (ticketId, userId, ip, userAgent) => {
+    writeLog('tickets_assign', {
+      action: 'ASSIGN_TICKET',
+      ticketId,
+      assignedTo: userId,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /tickets/user/{id}
+  getTicketsByUser: (userId, ticketsCount, ip, userAgent) => {
+    writeLog('tickets_get_by_user', {
+      action: 'GET_TICKETS_BY_USER',
+      userId,
+      ticketsCount,
+      ip,
+      userAgent
+    });
+  },
+
   // Error general
   error: (endpoint, error, ip) => {
     writeLog('users_error', {

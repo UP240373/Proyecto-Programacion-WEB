@@ -45,6 +45,17 @@ app.use(cors({
   DELETE /types/{id} = Eliminar tipo
   GET /categories = Obtener categorías
 
+  Metodos para tickets:
+  GET /tickets = Obtener todos los tickets
+  POST /tickets = Crear ticket
+  GET /tickets/{id} = Obtener ticket por ID
+  GET /tickets/filter = Filtrar tickets
+  PATCH /tickets/{id}/status = Cambiar estado del ticket
+  PUT /tickets/{id} = Actualizar ticket
+  DELETE /tickets/{id} = Eliminar ticket
+  POST /tickets/assign = Asignar ticket a desarrollador
+  GET /tickets/user/{id} = Obtener tickets por usuario
+
 */
 
 // GET /users = Obtener todos los usuarios
@@ -462,6 +473,249 @@ app.get('/categories', (req, res) => {
     }
     logger.getAllCategories(categories.length, req.ip, req.headers['categorie-agent']);
     res.status(200).json({ message: "Get information successfully", categories});
+  });
+});
+
+// GET /tickets = Obtener todos los tickets
+app.get('/tickets', (req, res) => {
+  const query = `SELECT * FROM tickets WHERE is_deleted = 0`;
+
+  db.query(query, (err, tickets) => {
+    if (err) {
+      logger.error('GET_ALL_TICKETS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err});
+    }
+    logger.getAllTickets(tickets.length, req.ip, req.headers['ticket-agent']);
+    res.status(200).json({ message: "Get information successfully", tickets});
+  });
+});
+
+// GET /tickets/filter = Filtrar tickets
+app.get('/tickets/filter', (req, res) => {
+  const { title, description, type_id, status, priority } = req.query;
+
+  let query = 'SELECT * FROM tickets WHERE is_deleted = 0';
+
+  if (title) {
+    query += ` AND title = "${title}"`;
+  }
+
+  if (description) {
+    query += ` AND description = "${description}"`;
+  }
+
+  if (type_id) {
+    query += ` AND type_id = "${type_id}"`;
+  }
+
+  if (status) {
+    query += ` AND status = "${status}"`;
+  }
+
+  if (priority) {
+    query += ` AND priority = "${priority}"`;
+  }
+  
+  db.query(query, (err, tickets) => {
+    if (err) {
+      logger.error('FILTER_TICKETS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (tickets.length === 0) {
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "Ticket don't found"});
+    }
+
+    logger.filterTickets({ title, description, type_id, status, priority }, tickets.length, req.ip, req.headers['ticket-agent']);
+    res.status(200).json({ message: "Get information successfully", tickets });
+  });
+});
+
+// GET /tickets/{id} = Obtener ticket por ID
+app.get('/tickets/:id', (req, res) => {
+  const query = `SELECT * FROM tickets WHERE id = ${req.params.id} AND is_deleted = 0`;
+
+  db.query(query, (err, ticket) => {
+    if (err) {
+      logger.error('GET_TICKET_BY_ID', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (ticket.length === 0) {
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "The ticket doesn't exists" });
+    }
+
+    const found = ticket.length > 0;
+    logger.getTicketById(req.params.id, found, req.ip, req.headers['ticket-agent']);
+    res.status(200).json({ message: "Get ticket successfully", ticket});
+  });
+});
+
+// POST /tickets = Crear ticket
+app.post('/tickets', (req, res) => {
+  const { title, description, type_id, status, priority, created_by } = req.body;
+
+  const filter = `SELECT * FROM tickets WHERE title = "${title}"`;
+  db.query(filter, (err, result) => {
+    if (err) {
+      logger.error('CREATE_TICKET', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (result.length > 0) {
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(409).json({ err: "The ticket already exists"});
+    }
+
+    const query = `INSERT INTO tickets (title, description, type_id, status, priority, created_by, is_deleted) VALUES ("${title}", "${description}", ${type_id}, "${status}", "${priority}", ${created_by}, 0);`;
+    db.query(query, (err, ticket) => {
+      if (err) {
+        logger.error('CREATE_TICKET', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+
+      logger.createTicket(req.body, req.body.id, req.ip, req.headers['ticket-agent']);
+      res.status(201).json({ message: "The ticket has been created successfully" });
+    });
+  });
+});
+
+// PATCH /tickets/{id}/status = Cambiar estado del ticket
+app.patch('/tickets/:id/status', (req, res) => {
+  const search = `SELECT * FROM tickets WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, ticket) => {
+    if (err) {
+      logger.error('UPDATE_TICKET_STATUS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (ticket.length === 0) {
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "The ticket doesn't exists" });
+    }
+
+    const newStatus = req.body.status;
+    const query = `UPDATE tickets SET status = "${newStatus}" WHERE id = ${req.params.id};`
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('UPDATE_TICKET_STATUS', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      res.status(200).json({ message: "The ticket's status has been updated" });
+    });
+  });
+});
+
+// PUT /tickets/{id} = Editar ticket
+app.put('/tickets/:id', (req, res) => {
+  const search = `SELECT * FROM tickets WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, ticket) => {
+    if (err) {
+      logger.error('UPDATE_TICKET', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (ticket.length === 0) {
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "The ticket doesn't exists" });
+    }
+
+    const newChanges = req.body;
+    const query = `UPDATE tickets SET title = "${newChanges.title}", description = "${newChanges.description}", type_id = "${newChanges.type_id}", status = "${newChanges.status}", priority = "${newChanges.priority}", created_by = ${newChanges.created_by} WHERE id = ${req.params.id}`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('UPDATE_TICKET', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.updateTicket(req.params.id, req.body, req.ip, req.headers['ticket-agent']);
+      res.status(200).json({ message: "The ticket has been updated" });
+    });
+  });
+});
+
+// DELETE /tickets/{id} = Eliminar ticket
+app.delete('/tickets/:id', (req, res) => {
+  const search = `SELECT * FROM tickets WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, ticket) => {
+    if (err) {
+      logger.error('DELETE_TICKET', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (ticket.length === 0) {
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "The ticket doesn't exists" });
+    }
+
+    const query = `UPDATE tickets SET is_deleted = 1 WHERE id = ${req.params.id}`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('DELETE_TICKET', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.deleteTicket(req.params.id, result, req.ip, req.headers['ticket-agent']);
+      res.status(200).json({ message: "The ticket has been deleted." });
+    });
+  });
+});
+
+// POST /tickets/assign = Asignar ticket a desarrollador
+app.post('/tickets/assign', (req, res) => {
+  const { id_ticket, id_user } = req.body;
+
+  const find = `SELECT * FROM tickets WHERE id = ${id_ticket}`;
+  db.query(find, (err, ticket) => {
+    if (err) {
+      logger.error('ASSIGN_TICKET', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (ticket.length === 0) {
+      logger.getTicketsByUser(id_ticket, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "The ticket doesn't exists" });
+    }
+
+    const query = `INSERT INTO tickets_devs (id_ticket, id_user) VALUES (${id_ticket}, ${id_user});`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('ASSIGN_TICKET', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+
+      logger.assignTicket(id_ticket, id_user, req.ip, req.headers['user-agent']);
+      res.status(201).json({ message: "A user was successfully assigned to the ticket"});
+    });
+  });
+});
+
+// GET /tickets/user/{id} = Obtener tickets por usuario
+app.get('/tickets/user/:id', (req, res) => {
+  const find = `SELECT * FROM tickets WHERE id = ${req.params.id} AND is_deleted = 0`;
+
+  db.query(find, (err, user) => {
+    if (err) {
+      logger.error('GET_TICKETS_BY_USER', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (user.length === 0) {
+      logger.getTicketsByUser(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      return res.status(404).json({ error: "The user doesn't exists" });
+    }
+
+    const query = `SELECT * FROM tickets WHERE id IN (select id_ticket from tickets_devs where id_user = ${req.params.id})`;
+    db.query(query, (err, tickets) => {
+      if (err) {
+        logger.error('GET_TICKETS_BY_USER', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+
+      logger.getTicketsByUser(req.params.id, tickets.length, req.ip, req.headers['user-agent']);
+      res.status(200).json({ message: "Get tickets successfully", tickets });
+    });
   });
 });
 

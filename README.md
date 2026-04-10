@@ -51,16 +51,27 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - PUT /users/{id} = Editar usuario
  - DELETE /users/{id} = Eliminar usuario
 
-2. Metodos para carrers:
+2. Metodos para Carrers:
  - GET /careers = Obtener carreras
  - GET /careers/filter = Filtrar carreras
  - POST /careers = Crear carrera
  - PUT /careers/{id} = Actualizar carrera
  - DELETE /careers/{id} = Eliminar carrera
 
-3. Metodos para types y categories:
+3. Metodos para Types y Categories:
  - GET /types = Obtener tipos de ticket
  - POST /types = Crear tipo de ticket
  - PUT /types/{id} = Actualizar tipo
  - DELETE /types/{id} = Eliminar tipo
  - GET /categories = Obtener categorías
+
+4. Metodos para Tickets:
+ - GET /tickets = Obtener todos los tickets
+ - POST /tickets = Crear ticket
+ - GET /tickets/{id} = Obtener ticket por ID
+ - GET /tickets/filter = Filtrar tickets
+ - PATCH /tickets/{id}/status = Cambiar estado del ticket
+ - PUT /tickets/{id} = Actualizar ticket
+ - DELETE /tickets/{id} = Eliminar ticket
+ - POST /tickets/assign = Asignar ticket a desarrollador
+ - GET /tickets/user/{id} = Obtener tickets por usuario
