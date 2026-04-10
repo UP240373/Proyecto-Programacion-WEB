@@ -41,5 +41,12 @@ Nota: En caso de unicamente querer utilizar el frontend, utilizar el comando:
 
 
 ## Metodos disponibles
-Aqui se encuentran todos los pedos que se pueden realizar dentro del programa utilizando una APi:
+Aqui se encuentran todos los metodos que se pueden realizar dentro del programa utilizando la API:
+1. Metodos para Users:
  - GET /users = Obtener todos los usuarios de la base de datos.
+ - GET /users/filter = Filtrar usuarios
+ - GET /users/{id} = Obtener usuario por ID
+ - POST /users = Crear usuario
+ - PATCH /users/{id}/status = Actualizar estado
+ - PUT /users/{id} = Editar usuario
+ - DELETE /users/{id} = Eliminar usuario
