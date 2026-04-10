@@ -108,6 +108,75 @@ const logger = {
     });
   },
 
+  // GET /careers
+  getAllCareers: (careersCount, ip, userAgent) => {
+    writeLog('careers_get_all', {
+      action: 'GET_ALL_CAREERS',
+      careersCount,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /careers/filter
+  filterCareers: (filters, resultCount, ip, userAgent) => {
+    writeLog('careers_filter', {
+      action: 'FILTER_CAREERS',
+      filters,
+      resultCount,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /users/{id}
+  getCareerById: (careerId, found, ip, userAgent) => {
+    writeLog('users_get_by_id', {
+      action: 'GET_USER_BY_ID',
+      careerId,
+      found, // true/false
+      ip,
+      userAgent
+    });
+  },
+
+  // POST /careers
+  createCareer: (careerData, newCareerId, ip, userAgent) => {
+    writeLog('careers_create', {
+      action: 'CREATE_CAREER',
+      careerData,
+      newCareerId,
+      ip,
+      userAgent
+    });
+  },
+
+  // PUT /careers/{id}
+  updateCareer: (careerId, updatedData, ip, userAgent) => {
+    writeLog('careers_update', {
+      action: 'UPDATE_CAREER',
+      careerId,
+      updatedData,
+      ip,
+      userAgent
+    });
+  },
+
+  // DELETE /careers/{id}
+  deleteCareer: (careerId, deletedCareerData, ip, userAgent) => {
+    writeLog('careers_delete', {
+      action: 'DELETE_CAREER',
+      careerId,
+      deletedCareerData: {
+        id: deletedCareerData?.id,
+        name: deletedCareerData?.name,
+        code: deletedCareerData?.code
+      },
+      ip,
+      userAgent
+    });
+  },
+
   // Error general
   error: (endpoint, error, ip) => {
     writeLog('users_error', {

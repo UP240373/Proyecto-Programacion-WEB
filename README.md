@@ -50,3 +50,10 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - PATCH /users/{id}/status = Actualizar estado
  - PUT /users/{id} = Editar usuario
  - DELETE /users/{id} = Eliminar usuario
+
+2. Metodos para carrers:
+ - GET /careers = Obtener carreras
+ - GET /careers/filter = Filtrar carreras
+ - POST /careers = Crear carrera
+ - PUT /careers/{id} = Actualizar carrera
+ - DELETE /careers/{id} = Eliminar carrera

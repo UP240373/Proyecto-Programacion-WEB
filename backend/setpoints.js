@@ -31,6 +31,13 @@ app.use(cors({
   PUT /users/{id} = Editar usuario
   DELETE /users/{id} = Eliminar usuario
 
+  Metodos para carrers:
+  GET /careers = Obtener carreras
+  GET /careers/filter = Filtrar carreras
+  POST /careers = Crear carrera
+  PUT /careers/{id} = Actualizar carrera
+  DELETE /careers/{id} = Eliminar carrera
+
 */
 
 // GET /users = Obtener todos los usuarios
@@ -81,7 +88,7 @@ app.get('/users/filter', (req, res) => {
     }
 
     logger.filterUsers({ name, email, career_id, rol }, users.length, req.ip, req.headers['user-agent']);
-    res.status(200).json({ message: "Success", users });
+    res.status(200).json({ message: "Get information successfully", users });
   });
 });
 
@@ -211,6 +218,132 @@ app.delete('/users/:id', (req, res) => {
       }
       logger.deleteUser(req.params.id, userToDelete, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The user has been deleted." });
+    });
+  });
+});
+
+// GET /careers = Obtener carreras
+app.get('/careers', (req, res) => {
+  const query = `SELECT * FROM careers WHERE is_deleted = 0`;
+
+  db.query(query, (err, careers) => {
+    if (err) {
+      logger.error('GET_ALL_CAREERS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err});
+    }
+    logger.getAllCareers(careers.length, req.ip, req.headers['career-agent']);
+    res.status(200).json({ message: "Get information successfully", careers});
+  });
+});
+
+// GET /careers/filter = Filtrar carreras
+app.get('/careers/filter', (req, res) => {
+  const { name, active } = req.query;
+
+  let query = 'SELECT * FROM careers WHERE is_deleted = 0';
+
+  if (name) {
+    query += ` AND name = "${name}"`;
+  }
+
+  if (active) {
+    query += ` AND active = "${active}"`;
+  }
+
+  db.query(query, (err, careers) => {
+    if (err) {
+      logger.error('FILTER_CAREERS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (careers.length === 0) {
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      return res.status(404).json({ error: "Careers don't found"});
+    }
+
+    logger.filterCareers({ name, active }, careers.length, req.ip, req.headers['career-agent']);
+    res.status(200).json({ message: "Get information successfully", careers });
+  });
+});
+
+// POST /careers = Crear carrera
+app.post('/careers', (req, res) => {
+  const { name, active } = req.body;
+
+  const filter = `SELECT * FROM careers WHERE name = "${name}"`;
+  db.query(filter, (err, result) => {
+    if (err) {
+      logger.error('CREATE_CARRER', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (result.length > 0) {
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      return res.status(409).json({ err: "The career already exists"});
+    }
+
+    const query = `INSERT INTO careers (name, active, is_deleted) VALUES ("${name}", ${active}, 0);`;
+    db.query(query, (err, career) => {
+      if (err) {
+        logger.error('CREATE_CAREER', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+
+      logger.createCareer(req.body, req.body.id, req.ip, req.headers['career-agent']);
+      res.status(201).json({ message: "The career has been created successfully" });
+    })
+  });
+});
+
+// PUT /careers/{id} = Actualizar carrera
+app.put('/careers/:id', (req, res) => {
+  const search = `SELECT * FROM careers WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, career) => {
+    if (err) {
+      logger.error('UPDATE_CAREER', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (career.length === 0) {
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      return res.status(404).json({ error: "The career doesn't exists" });
+    }
+
+    const newChanges = req.body;
+    const query = `UPDATE careers SET name = "${newChanges.name}", active = ${newChanges.active} WHERE id = ${req.params.id}`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('UPDATE_CAREER', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.updateCareer(req.params.id, req.body, req.ip, req.headers['career-agent']);
+      res.status(200).json({ message: "The career has been updated" });
+    });
+  });
+});
+
+// DELETE /careers/{id} = Eliminar carrera
+app.delete('/careers/:id', (req, res) => {
+  const search = `SELECT * FROM careers WHERE id = ${req.params.id} AND is_deleted = 0`;
+  db.query(search, (err, career) => {
+    if (err) {
+      logger.error('DELETE_CAREER', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (career.length === 0) {
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      return res.status(404).json({ error: "The career doesn't exists" });
+    }
+
+    const query = `UPDATE careers SET is_deleted = 1 WHERE id = ${req.params.id}`;
+    db.query(query, (err, result) => {
+      if (err) {
+        logger.error('DELETE_CAREER', err, req.ip);
+        return res.status(500).json({ error: "Database error", err });
+      }
+      logger.deleteCareer(req.params.id, careerToDelete, req.ip, req.headers['career-agent']);
+      res.status(200).json({ message: "The career has been deleted." });
     });
   });
 });
