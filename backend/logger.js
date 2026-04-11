@@ -348,6 +348,36 @@ const logger = {
     });
   },
 
+  // GET /kpi/tickets/status
+  getTicketsByStatusKPI: (statusData, ip, userAgent) => {
+    writeLog('kpi_tickets_status', {
+      action: 'KPI_TICKETS_BY_STATUS',
+      data: statusData,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /kpi/tickets/user
+  getTicketsByUserKPI: (userData, ip, userAgent) => {
+    writeLog('kpi_tickets_user', {
+      action: 'KPI_TICKETS_BY_USER',
+      data: userData,
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /kpi/tickets/avg-time
+  getAverageTimeKPI: (avgTimeData, ip, userAgent) => {
+    writeLog('kpi_tickets_avg_time', {
+      action: 'KPI_TICKETS_AVG_TIME',
+      data: avgTimeData,
+      ip,
+      userAgent
+    });
+  },
+
   // Error general
   error: (endpoint, error, ip) => {
     writeLog('users_error', {

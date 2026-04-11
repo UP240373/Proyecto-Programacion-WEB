@@ -56,6 +56,10 @@ app.use(cors({
   POST /tickets/assign = Asignar ticket a desarrollador
   GET /tickets/user/{id} = Obtener tickets por usuario
 
+  Metodos para KPI:
+  GET /kpi/tickets/status = Tickets por estado
+  GET /kpi/tickets/user = Tickets por usuario
+
 */
 
 // GET /users = Obtener todos los usuarios
@@ -716,6 +720,46 @@ app.get('/tickets/user/:id', (req, res) => {
       logger.getTicketsByUser(req.params.id, tickets.length, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "Get tickets successfully", tickets });
     });
+  });
+});
+
+// GET /kpi/tickets/status = Tickets por estado
+app.get('/kpi/tickets/status', (req, res) => {
+  const query = `SELECT * FROM tickets WHERE is_deleted = 0 ORDER BY status DESC`;
+
+  db.query(query, (err, tickets) => {
+    if (err) {
+      logger.error('KPI_TICKETS_BY_STATUS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (tickets.length === 0) {
+      logger.error('KPI_TICKETS_BY_STATUS', err, req.ip);
+      return res.status(404).json({ error: "Don't exist tickets in the database", err });
+    }
+
+    logger.getTicketsByStatusKPI(tickets, req.ip, req.headers['user-agent']);
+    res.status(200).json({ message: "Get information successfully", tickets });
+  });
+});
+
+// GET /kpi/tickets/user = Tickets por usuario
+app.get('/kpi/tickets/user', (req, res) => {
+  const query = `SELECT GROUP_CONCAT(u.name SEPARATOR ', ') as usuario_asignado, t.* FROM tickets t LEFT JOIN tickets_devs td ON t.id = td.id_ticket LEFT JOIN users u ON td.id_user = u.id GROUP BY t.id ORDER BY u.name ASC`;
+
+  db.query(query, (err, tickets) => {
+    if (err) {
+      logger.error('KPI_TICKETS_BY_USERS', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (tickets.length === 0) {
+      logger.error('KPI_TICKETS_BY_USERS', err, req.ip);
+      return res.status(404).json({ error: "Don't exist tickets in the database", err });
+    }
+
+    logger.getTicketsByUserKPI(tickets, req.ip, req.headers['user-agent']);
+    res.status(200).json({ message: "Get information successfully", tickets });
   });
 });
 

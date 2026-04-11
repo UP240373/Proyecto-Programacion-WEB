@@ -75,3 +75,7 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - DELETE /tickets/{id} = Eliminar ticket
  - POST /tickets/assign = Asignar ticket a desarrollador
  - GET /tickets/user/{id} = Obtener tickets por usuario
+
+5. Metodos de KPIs:
+ - GET /kpi/tickets/status = Tickets por estado
+ - GET /kpi/tickets/user = Tickets por usuario
