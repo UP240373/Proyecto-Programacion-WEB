@@ -23,6 +23,54 @@ const writeLog = (type, data) => {
 };
 
 const logger = {
+
+  // ====================
+  //  Loggers para Login
+  // ====================
+
+  // POST /auth/login
+  loginAttempt: (email, success, userId, ip, userAgent) => {
+    writeLog('auth_login', {
+      action: 'LOGIN_ATTEMPT',
+      email,
+      success,
+      userId: success ? userId : null,
+      reason: success ? null : (userId === 'invalid_password' ? 'Invalid password' : 'User not found'),
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /auth/profile
+  getProfile: (userId, userData, ip, userAgent) => {
+    writeLog('auth_profile', {
+      action: 'GET_PROFILE',
+      userId,
+      userData: {
+        id: userData?.id,
+        name: userData?.name,
+        email: userData?.email,
+        rol: userData?.rol
+      },
+      ip,
+      userAgent
+    });
+  },
+
+  // GET /auth/logout
+  logout: (userId, ip, userAgent) => {
+    writeLog('auth_logout', {
+      action: 'LOGOUT',
+      userId,
+      ip,
+      userAgent
+    });
+  },
+
+  // ====================
+  //  Loggers para Users
+  // ====================
+
   // GET /users
   getAllUsers: (usersCount, ip, userAgent) => {
     writeLog('users_get_all', {
@@ -108,6 +156,10 @@ const logger = {
     });
   },
 
+  // ======================
+  //  Loggers para Careers
+  // ======================
+
   // GET /careers
   getAllCareers: (careersCount, ip, userAgent) => {
     writeLog('careers_get_all', {
@@ -177,6 +229,10 @@ const logger = {
     });
   },
 
+  // ====================
+  //  Loggers para Ttpes
+  // ====================
+
   // GET /types
   getAllTypes: (typesCount, ip, userAgent) => {
     writeLog('types_get_all', {
@@ -235,6 +291,10 @@ const logger = {
     });
   },
 
+  // =========================
+  //  Loggers para Categories
+  // =========================
+
   // GET /categories
   getAllCategories: (categoriesCount, ip, userAgent) => {
     writeLog('categories_get_all', {
@@ -244,6 +304,10 @@ const logger = {
       userAgent
     });
   },
+
+  // ======================
+  //  Loggers para Tickets
+  // ======================
 
   // GET /tickets
   getAllTickets: (ticketsCount, ip, userAgent) => {
@@ -347,6 +411,10 @@ const logger = {
       userAgent
     });
   },
+
+  // ===================
+  //  Loggers para KPIs
+  // ===================
 
   // GET /kpi/tickets/status
   getTicketsByStatusKPI: (statusData, ip, userAgent) => {

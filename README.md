@@ -42,7 +42,13 @@ Nota: En caso de unicamente querer utilizar el frontend, utilizar el comando:
 
 ## Metodos disponibles
 Aqui se encuentran todos los metodos que se pueden realizar dentro del programa utilizando la API:
-1. Metodos para Users:
+
+1. Metodos para login:
+ - POST /auth/login = Login
+ - GET /auth/profile = Obtener perfil
+ - POST /auth/logout = Logout
+
+2. Metodos para Users:
  - GET /users = Obtener todos los usuarios de la base de datos.
  - GET /users/filter = Filtrar usuarios
  - GET /users/{id} = Obtener usuario por ID
@@ -51,21 +57,21 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - PUT /users/{id} = Editar usuario
  - DELETE /users/{id} = Eliminar usuario
 
-2. Metodos para Carrers:
+3. Metodos para Carrers:
  - GET /careers = Obtener carreras
  - GET /careers/filter = Filtrar carreras
  - POST /careers = Crear carrera
  - PUT /careers/{id} = Actualizar carrera
  - DELETE /careers/{id} = Eliminar carrera
 
-3. Metodos para Types y Categories:
+4. Metodos para Types y Categories:
  - GET /types = Obtener tipos de ticket
  - POST /types = Crear tipo de ticket
  - PUT /types/{id} = Actualizar tipo
  - DELETE /types/{id} = Eliminar tipo
  - GET /categories = Obtener categorías
 
-4. Metodos para Tickets:
+5. Metodos para Tickets:
  - GET /tickets = Obtener todos los tickets
  - POST /tickets = Crear ticket
  - GET /tickets/{id} = Obtener ticket por ID
@@ -76,6 +82,6 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - POST /tickets/assign = Asignar ticket a desarrollador
  - GET /tickets/user/{id} = Obtener tickets por usuario
 
-5. Metodos de KPIs:
+6. Metodos de KPIs:
  - GET /kpi/tickets/status = Tickets por estado
  - GET /kpi/tickets/user = Tickets por usuario

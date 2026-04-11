@@ -22,6 +22,11 @@ app.use(cors({
 
   SETPOINTS
 
+  Metodos para login:
+  POST /auth/login = Login
+  GET /auth/profile = Obtener perfil
+  POST /auth/logout = Logout
+
   Metodos para users:
   GET /users = Obtener todos los usuarios
   GET /users/filter = Filtrar usuarios
@@ -61,6 +66,80 @@ app.use(cors({
   GET /kpi/tickets/user = Tickets por usuario
 
 */
+
+// POST /auth/login = Login
+app.post('/auth/login', (req, res) => {
+  const { email, password} = req.body;
+
+  if (!email || !password) {
+    logger.loginAttempt(email, false, 'missing_fields', req.ip, req.headers['user-agent']);
+    return res.status(400).json({ error: "email and password are required" });
+  }
+
+  const query = `SELECT * FROM users WHERE email = "${email}"`;
+  db.query(query, (err, user) => {
+    if (err) {
+      logger.error('LOGIN_DATABASE_ERROR', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (user.length === 0) {
+      logger.loginAttempt(email, false, 'user_not_found', req.ip, req.headers['user-agent']);
+      return res.status(401).json({ error: "User don't found"});
+    }
+
+    if (user[0].active === 0) {
+      logger.loginAttempt(email, false, 'user_isnt_active', req.ip, req.headers['user-agent']);
+      return res.status(401).json({ error: "User isn't active"});
+    }
+
+    if (user[0].failed_attempts >= 5) {
+      logger.loginAttempt(email, false, 'a_lot_failed_attempts', req.ip, req.headers['user-agent']);
+      return res.status(401).json({ error: "Many attempts have been made, please try again later"});
+    }
+
+    if (user[0].password != password) {
+      logger.loginAttempt(email, false, 'password_incorrect', req.ip, req.headers['user-agent']);
+      const failed = `UPDATE users SET failed_attempts = (failed_attempts + 1) WHERE id = ${user[0].id}`;
+      db.query(failed);
+      return res.status(401).json({ error: "Password Incorrect, Try Again", failed_attempts: (user[0].failed_attempts + 1)});
+    }
+
+    const query = `UPDATE users SET failed_attempts = 0 WHERE id = ${user[0].id}`;
+    db.query(query);
+
+    logger.loginAttempt(email, true, user.id, req.ip, req.headers['user-agent']);
+    res.status(200).json({ message: "Login successful", user});
+
+  });
+});
+
+// GET /auth/profile = Obtener perfil
+app.get('/auth/profile' , (req, res) => {
+  const query = `SELECT * FROM users WHERE id = ${req.body.id} AND is_deleted = 0`;
+
+  db.query(query, (err, user) => {
+    if (err) {
+      logger.error('GET_PROFILE_DATABASE_ERROR', err, req.ip);
+      return res.status(500).json({ error: "Database error", err });
+    }
+
+    if (user.length === 0) {
+      return res.status(404).json({ error: "The user doesn't exists" });
+    }
+
+    logger.getProfile(req.params.id, user, req.ip, req.headers['user-agent']);
+    res.status(200).json({ message: "Get user successfully", user});
+  });
+});
+
+// POST /auth/logout = Logout
+app.post('/auth/logout', (req, res) => {
+  const id = req.body.id;
+  logger.logout(id, req.ip, req.headers['user-agent']);
+  
+  res.status(200).json({ message: 'Logout successful' });
+});
 
 // GET /users = Obtener todos los usuarios
 app.get('/users', (req, res) => {
