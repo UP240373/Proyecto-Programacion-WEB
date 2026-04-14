@@ -20,14 +20,14 @@ app.use(cors({
 
 /*
 
-  SETPOINTS
+  ENDPOINTS
 
-  Metodos para login:
+  Endpoints para login:
   POST /auth/login = Login
   GET /auth/profile = Obtener perfil
   POST /auth/logout = Logout
 
-  Metodos para users:
+  Endpoints para users:
   GET /users = Obtener todos los usuarios
   GET /users/filter = Filtrar usuarios
   GET /users/{id} = Obtener usuario por ID
@@ -36,21 +36,21 @@ app.use(cors({
   PUT /users/{id} = Editar usuario
   DELETE /users/{id} = Eliminar usuario
 
-  Metodos para carrers:
+  Endpoints para carrers:
   GET /careers = Obtener carreras
   GET /careers/filter = Filtrar carreras
   POST /careers = Crear carrera
   PUT /careers/{id} = Actualizar carrera
   DELETE /careers/{id} = Eliminar carrera
 
-  Metodos para types y categories:
+  Endpoints para types y categories:
   GET /types = Obtener tipos de ticket
   POST /types = Crear tipo de ticket
   PUT /types/{id} = Actualizar tipo
   DELETE /types/{id} = Eliminar tipo
   GET /categories = Obtener categorías
 
-  Metodos para tickets:
+  Endpoints para tickets:
   GET /tickets = Obtener todos los tickets
   POST /tickets = Crear ticket
   GET /tickets/{id} = Obtener ticket por ID
@@ -61,7 +61,7 @@ app.use(cors({
   POST /tickets/assign = Asignar ticket a desarrollador
   GET /tickets/user/{id} = Obtener tickets por usuario
 
-  Metodos para KPI:
+  Endpoints para KPI:
   GET /kpi/tickets/status = Tickets por estado
   GET /kpi/tickets/user = Tickets por usuario
 
@@ -73,49 +73,49 @@ app.post('/auth/login', (req, res) => {
 
   if (!email || !password) {
     logger.loginAttempt(email, false, 'missing_fields', req.ip, req.headers['user-agent']);
-    return res.status(400).json({ error: "email and password are required" });
+    return res.status(400).json({ success: false, error: "email and password are required" });
   }
 
   const query = `SELECT * FROM users WHERE email = "${email}"`;
   db.query(query, (err, user) => {
     if (err) {
       logger.error('LOGIN_DATABASE_ERROR', err, req.ip);
-      return res.status(500).json({ error: "Database error", err });
+      return res.status(500).json({ success: false, error: "Database error", err });
     }
 
     if (user.length === 0) {
       logger.loginAttempt(email, false, 'user_not_found', req.ip, req.headers['user-agent']);
-      return res.status(401).json({ error: "User don't found"});
+      return res.status(401).json({ success: false, error: "User doesn't found"});
     }
 
-    if (user[0].active === 0) {
-      logger.loginAttempt(email, false, 'user_isnt_active', req.ip, req.headers['user-agent']);
-      return res.status(401).json({ error: "User isn't active"});
+    if (user[0].is_deleted === 1) {
+      logger.loginAttempt(email, false, 'user_not_found', req.ip, req.headers['user-agent']);
+      return res.status(401).json({ success: false, error: "User doesn't found"});
     }
 
-    if (user[0].failed_attempts >= 5) {
+    if (user[0].failed_attempts >= 4) {
       logger.loginAttempt(email, false, 'a_lot_failed_attempts', req.ip, req.headers['user-agent']);
-      return res.status(401).json({ error: "Many attempts have been made, please try again later"});
+      return res.status(404).json({ success: false, error: "Many attempts have been made, please try again later"});
     }
 
     if (user[0].password != password) {
       logger.loginAttempt(email, false, 'password_incorrect', req.ip, req.headers['user-agent']);
       const failed = `UPDATE users SET failed_attempts = (failed_attempts + 1) WHERE id = ${user[0].id}`;
       db.query(failed);
-      return res.status(401).json({ error: "Password Incorrect, Try Again", failed_attempts: (user[0].failed_attempts + 1)});
+      return res.status(404).json({ success: false, error: "Please password Incorrect, Try Again", failed_attempts: (user[0].failed_attempts + 1)});
     }
 
-    const query = `UPDATE users SET failed_attempts = 0 WHERE id = ${user[0].id}`;
+    const query = `UPDATE users SET failed_attempts = 0, active = 1 WHERE id = ${user[0].id}`;
     db.query(query);
 
     logger.loginAttempt(email, true, user.id, req.ip, req.headers['user-agent']);
-    res.status(200).json({ message: "Login successful", user});
+    res.status(200).json({ success: true, message: "Login successful", user});
 
   });
 });
 
 // GET /auth/profile = Obtener perfil
-app.get('/auth/profile' , (req, res) => {
+app.post('/auth/profile' , (req, res) => {
   const query = `SELECT * FROM users WHERE id = ${req.body.id} AND is_deleted = 0`;
 
   db.query(query, (err, user) => {
@@ -137,6 +137,9 @@ app.get('/auth/profile' , (req, res) => {
 app.post('/auth/logout', (req, res) => {
   const id = req.body.id;
   logger.logout(id, req.ip, req.headers['user-agent']);
+
+  const query = `UPDATE users SET active = 0 WHERE id = ${id}`;
+  db.query(query);
   
   res.status(200).json({ message: 'Logout successful' });
 });
@@ -216,7 +219,7 @@ app.get('/users/:id', (req, res) => {
 
 // POST /users = Crear usuario
 app.post('/users', (req, res) => {
-  const { name, last_name, username, email, career_id, active, password, rol, failed_attempts } = req.body;
+  const { name, last_name, username, email, career_id, active, password, rol } = req.body;
 
   const filter = `SELECT * FROM users WHERE email = "${email}" OR username = "${username}"`;
   db.query(filter, (err, result) => {
@@ -230,7 +233,7 @@ app.post('/users', (req, res) => {
       return res.status(409).json({ err: "The username or email already exists"});
     }
 
-    const query = `INSERT INTO users (name, last_name, username, email, career_id, active, password, rol, failed_attempts, is_deleted) VALUES ("${name}", "${last_name}", "${username}", "${email}", ${career_id}, ${active}, "${password}", "${rol}", ${failed_attempts}, 0);`;
+    const query = `INSERT INTO users (name, last_name, username, email, career_id, active, password, rol, failed_attempts, is_deleted) VALUES ("${name}", "${last_name}", "${username}", "${email}", ${career_id}, ${active}, "${password}", "${rol}", 0, 0);`;
     db.query(query, (err, user) => {
       if (err) {
         logger.error('CREATE_USER', err, req.ip);
@@ -332,7 +335,7 @@ app.get('/careers', (req, res) => {
       logger.error('GET_ALL_CAREERS', err, req.ip);
       return res.status(500).json({ error: "Database error", err});
     }
-    logger.getAllCareers(careers.length, req.ip, req.headers['career-agent']);
+    logger.getAllCareers(careers.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", careers});
   });
 });
@@ -358,11 +361,11 @@ app.get('/careers/filter', (req, res) => {
     }
 
     if (careers.length === 0) {
-      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "Careers don't found"});
     }
 
-    logger.filterCareers({ name, active }, careers.length, req.ip, req.headers['career-agent']);
+    logger.filterCareers({ name, active }, careers.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", careers });
   });
 });
@@ -379,7 +382,7 @@ app.post('/careers', (req, res) => {
     }
 
     if (result.length > 0) {
-      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(409).json({ err: "The career already exists"});
     }
 
@@ -390,7 +393,7 @@ app.post('/careers', (req, res) => {
         return res.status(500).json({ error: "Database error", err });
       }
 
-      logger.createCareer(req.body, req.body.id, req.ip, req.headers['career-agent']);
+      logger.createCareer(req.body, req.body.id, req.ip, req.headers['user-agent']);
       res.status(201).json({ message: "The career has been created successfully" });
     })
   });
@@ -406,7 +409,7 @@ app.put('/careers/:id', (req, res) => {
     }
 
     if (career.length === 0) {
-      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The career doesn't exists" });
     }
 
@@ -417,7 +420,7 @@ app.put('/careers/:id', (req, res) => {
         logger.error('UPDATE_CAREER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.updateCareer(req.params.id, req.body, req.ip, req.headers['career-agent']);
+      logger.updateCareer(req.params.id, req.body, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The career has been updated" });
     });
   });
@@ -433,7 +436,7 @@ app.delete('/careers/:id', (req, res) => {
     }
 
     if (career.length === 0) {
-      logger.getCareerById(req.params.id, false, req.ip, req.headers['career-agent']);
+      logger.getCareerById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The career doesn't exists" });
     }
 
@@ -443,7 +446,7 @@ app.delete('/careers/:id', (req, res) => {
         logger.error('DELETE_CAREER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.deleteCareer(req.params.id, careerToDelete, req.ip, req.headers['career-agent']);
+      logger.deleteCareer(req.params.id, careerToDelete, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The career has been deleted." });
     });
   });
@@ -458,7 +461,7 @@ app.get('/types', (req, res) => {
       logger.error('GET_ALL_TYPES', err, req.ip);
       return res.status(500).json({ error: "Database error", err});
     }
-    logger.getAllTypes(types.length, req.ip, req.headers['type-agent']);
+    logger.getAllTypes(types.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", types});
   });
 });
@@ -475,7 +478,7 @@ app.post('/types', (req, res) => {
     }
 
     if (result.length > 0) {
-      logger.getTypeById(req.params.id, false, req.ip, req.headers['type-agent']);
+      logger.getTypeById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(409).json({ err: "The type already exists"});
     }
 
@@ -486,7 +489,7 @@ app.post('/types', (req, res) => {
         return res.status(500).json({ error: "Database error", err });
       }
 
-      logger.createType(req.body, req.body.id, req.ip, req.headers['type-agent']);
+      logger.createType(req.body, req.body.id, req.ip, req.headers['user-agent']);
       res.status(201).json({ message: "The type has been created successfully" });
     })
   });
@@ -502,7 +505,7 @@ app.put('/types/:id', (req, res) => {
     }
 
     if (type.length === 0) {
-      logger.getUserById(req.params.id, false, req.ip, req.headers['type-agent']);
+      logger.getUserById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The user doesn't exists" });
     }
 
@@ -513,7 +516,7 @@ app.put('/types/:id', (req, res) => {
         logger.error('UPDATE_TYPE', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.updateType(req.params.id, req.body, req.ip, req.headers['type-agent']);
+      logger.updateType(req.params.id, req.body, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The type has been updated" });
     });
   });
@@ -529,7 +532,7 @@ app.delete('/types/:id', (req, res) => {
     }
 
     if (type.length === 0) {
-      logger.getTypeById(req.params.id, false, req.ip, req.headers['type-agent']);
+      logger.getTypeById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The career doesn't exists" });
     }
 
@@ -539,7 +542,7 @@ app.delete('/types/:id', (req, res) => {
         logger.error('DELETE_TYPE', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.deleteType(req.params.id, result, req.ip, req.headers['type-agent']);
+      logger.deleteType(req.params.id, result, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The type has been deleted." });
     });
   });
@@ -554,7 +557,7 @@ app.get('/categories', (req, res) => {
       logger.error('GET_ALL_CATEGORIES', err, req.ip);
       return res.status(500).json({ error: "Database error", err});
     }
-    logger.getAllCategories(categories.length, req.ip, req.headers['categorie-agent']);
+    logger.getAllCategories(categories.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", categories});
   });
 });
@@ -568,7 +571,7 @@ app.get('/tickets', (req, res) => {
       logger.error('GET_ALL_TICKETS', err, req.ip);
       return res.status(500).json({ error: "Database error", err});
     }
-    logger.getAllTickets(tickets.length, req.ip, req.headers['ticket-agent']);
+    logger.getAllTickets(tickets.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", tickets});
   });
 });
@@ -606,11 +609,11 @@ app.get('/tickets/filter', (req, res) => {
     }
 
     if (tickets.length === 0) {
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "Ticket don't found"});
     }
 
-    logger.filterTickets({ title, description, type_id, status, priority }, tickets.length, req.ip, req.headers['ticket-agent']);
+    logger.filterTickets({ title, description, type_id, status, priority }, tickets.length, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get information successfully", tickets });
   });
 });
@@ -626,12 +629,12 @@ app.get('/tickets/:id', (req, res) => {
     }
 
     if (ticket.length === 0) {
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The ticket doesn't exists" });
     }
 
     const found = ticket.length > 0;
-    logger.getTicketById(req.params.id, found, req.ip, req.headers['ticket-agent']);
+    logger.getTicketById(req.params.id, found, req.ip, req.headers['user-agent']);
     res.status(200).json({ message: "Get ticket successfully", ticket});
   });
 });
@@ -648,7 +651,7 @@ app.post('/tickets', (req, res) => {
     }
 
     if (result.length > 0) {
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(409).json({ err: "The ticket already exists"});
     }
 
@@ -659,7 +662,7 @@ app.post('/tickets', (req, res) => {
         return res.status(500).json({ error: "Database error", err });
       }
 
-      logger.createTicket(req.body, req.body.id, req.ip, req.headers['ticket-agent']);
+      logger.createTicket(req.body, req.body.id, req.ip, req.headers['user-agent']);
       res.status(201).json({ message: "The ticket has been created successfully" });
     });
   });
@@ -675,7 +678,7 @@ app.patch('/tickets/:id/status', (req, res) => {
     }
 
     if (ticket.length === 0) {
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The ticket doesn't exists" });
     }
 
@@ -686,7 +689,7 @@ app.patch('/tickets/:id/status', (req, res) => {
         logger.error('UPDATE_TICKET_STATUS', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The ticket's status has been updated" });
     });
   });
@@ -702,7 +705,7 @@ app.put('/tickets/:id', (req, res) => {
     }
 
     if (ticket.length === 0) {
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The ticket doesn't exists" });
     }
 
@@ -713,7 +716,7 @@ app.put('/tickets/:id', (req, res) => {
         logger.error('UPDATE_TICKET', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.updateTicket(req.params.id, req.body, req.ip, req.headers['ticket-agent']);
+      logger.updateTicket(req.params.id, req.body, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The ticket has been updated" });
     });
   });
@@ -729,7 +732,7 @@ app.delete('/tickets/:id', (req, res) => {
     }
 
     if (ticket.length === 0) {
-      logger.getTicketById(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketById(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The ticket doesn't exists" });
     }
 
@@ -739,7 +742,7 @@ app.delete('/tickets/:id', (req, res) => {
         logger.error('DELETE_TICKET', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.deleteTicket(req.params.id, result, req.ip, req.headers['ticket-agent']);
+      logger.deleteTicket(req.params.id, result, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The ticket has been deleted." });
     });
   });
@@ -757,7 +760,7 @@ app.post('/tickets/assign', (req, res) => {
     }
 
     if (ticket.length === 0) {
-      logger.getTicketsByUser(id_ticket, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketsByUser(id_ticket, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The ticket doesn't exists" });
     }
 
@@ -785,7 +788,7 @@ app.get('/tickets/user/:id', (req, res) => {
     }
 
     if (user.length === 0) {
-      logger.getTicketsByUser(req.params.id, false, req.ip, req.headers['ticket-agent']);
+      logger.getTicketsByUser(req.params.id, false, req.ip, req.headers['user-agent']);
       return res.status(404).json({ error: "The user doesn't exists" });
     }
 

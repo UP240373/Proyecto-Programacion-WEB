@@ -30,7 +30,7 @@ Project/
 
 
 ## Pasos para ejecucion
-Para ejecutar el projecto, utiliza el comando:
+Para ejecutar el proyecto, utiliza el comando:
  - npm run project
 
 Nota: En caso de unicamente querer utilizar el backend, utilizar el comando:
@@ -40,15 +40,15 @@ Nota: En caso de unicamente querer utilizar el frontend, utilizar el comando:
  - npm run frontend
 
 
-## Metodos disponibles
-Aqui se encuentran todos los metodos que se pueden realizar dentro del programa utilizando la API:
+## Endpoints disponibles
+Aqui se encuentran todos los endpoints que se pueden realizar dentro del programa utilizando la API:
 
-1. Metodos para login:
+1. Endpoints para login:
  - POST /auth/login = Login
  - GET /auth/profile = Obtener perfil
  - POST /auth/logout = Logout
 
-2. Metodos para Users:
+2. Endpoints para Users:
  - GET /users = Obtener todos los usuarios de la base de datos.
  - GET /users/filter = Filtrar usuarios
  - GET /users/{id} = Obtener usuario por ID
@@ -57,21 +57,21 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - PUT /users/{id} = Editar usuario
  - DELETE /users/{id} = Eliminar usuario
 
-3. Metodos para Carrers:
+3. Endpoints para Carrers:
  - GET /careers = Obtener carreras
  - GET /careers/filter = Filtrar carreras
  - POST /careers = Crear carrera
  - PUT /careers/{id} = Actualizar carrera
  - DELETE /careers/{id} = Eliminar carrera
 
-4. Metodos para Types y Categories:
+4. Endpoints para Types y Categories:
  - GET /types = Obtener tipos de ticket
  - POST /types = Crear tipo de ticket
  - PUT /types/{id} = Actualizar tipo
  - DELETE /types/{id} = Eliminar tipo
  - GET /categories = Obtener categorías
 
-5. Metodos para Tickets:
+5. Endpoints para Tickets:
  - GET /tickets = Obtener todos los tickets
  - POST /tickets = Crear ticket
  - GET /tickets/{id} = Obtener ticket por ID
@@ -82,6 +82,17 @@ Aqui se encuentran todos los metodos que se pueden realizar dentro del programa 
  - POST /tickets/assign = Asignar ticket a desarrollador
  - GET /tickets/user/{id} = Obtener tickets por usuario
 
-6. Metodos de KPIs:
+6. Endpoints de KPIs:
  - GET /kpi/tickets/status = Tickets por estado
  - GET /kpi/tickets/user = Tickets por usuario
+
+## Roles dentro de la pagina
+Existen 2 roles principales que podran interactuar con la pagina. El primero es:
+
+1. Admin  
+Este usuario sera capaz de:  
+ -  
+
+2. Dev
+Este usuario sera capaz de:
+ -  
