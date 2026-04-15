@@ -6,9 +6,10 @@ interface sidebarParams {
   id: number | undefined,
   name: string | undefined,
   last_name: string | undefined,
+  options: string[] | undefined,
 }
 
-export default function Sidebar({ id, name, last_name } : sidebarParams) {
+export default function Sidebar({ id, name, last_name, options } : sidebarParams) {
 
   // Movimiento entre rutas
   const router = useRouter();
@@ -32,6 +33,9 @@ export default function Sidebar({ id, name, last_name } : sidebarParams) {
     <div style={{ display: 'flex', flexDirection: 'row' }}>
       <p>Imagen del usuario</p>
       <p>{name} {last_name}</p>
+      {options?.map((option) => (
+        <button key={option} onClick={() => router.push(`./${option}`)}>{option}</button>
+      ))}
       <button onClick={onLogout}>Cerrar Sesion</button>
     </div>
   )

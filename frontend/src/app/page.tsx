@@ -32,22 +32,6 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // Lista de usuarios
-  const [users, setUsers] = useState<User[]>([])
-
-  // Correr funcion al iniciar la pagina
-  useEffect(() => {
-    onGetAPI();
-  }, []);
-
-  const API = "http://localhost:3000/users";
-
-  const onGetAPI = async () => {
-    const response = await fetch(API);
-    const data = await response.json();
-    setUsers(data.users);
-  };
-
   // Realizar login
   const onLogin = async () => {
     const profile = {
@@ -82,16 +66,6 @@ export default function Home() {
 
   return (
     <main>
-      <div>
-        {users.map((user) => (
-          <div key={user.id}>
-            <h3>{user.name} {user.last_name}</h3>
-            <p>Email: {user.email}</p>
-            <p>Rol: {user.rol}</p>
-          </div>
-        ))}
-      </div>
-
       <div>
         <div>
           <label>Enter your email address:</label><br/>

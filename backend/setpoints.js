@@ -564,7 +564,7 @@ app.get('/categories', (req, res) => {
 
 // GET /tickets = Obtener todos los tickets
 app.get('/tickets', (req, res) => {
-  const query = `SELECT * FROM tickets WHERE is_deleted = 0`;
+  const query = `SELECT t.*, ty.type AS type, u.name AS created_by_name FROM tickets t LEFT JOIN types ty ON t.type_id = ty.id LEFT JOIN users u ON t.created_by = u.id WHERE t.is_deleted = 0`;
 
   db.query(query, (err, tickets) => {
     if (err) {

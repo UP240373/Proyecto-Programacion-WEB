@@ -7,6 +7,14 @@ Project/
 ├── frontend/  
 │ ├── public/  
 │ ├── src/app/  
+│ │ ├── Admin/  
+│ │ └── page.tsx  
+│ │ ├── api/  
+│ │ └── api.ts  
+│ │ ├── Components/  
+│ │ └── sidebar.tsx  
+│ │ ├── Dev/  
+│ │ └── page.tsx  
 │ │ ├── layout.tsx  
 │ │ └── page.tsx  
 │ └── .gitignore  
@@ -91,7 +99,7 @@ Existen 2 roles principales que podran interactuar con la pagina. El primero es:
 
 1. Admin  
 Este usuario sera capaz de:  
- -  
+ -  Ver todos los tickets realizados
 
 2. Dev
 Este usuario sera capaz de:

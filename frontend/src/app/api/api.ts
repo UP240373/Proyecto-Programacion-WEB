@@ -9,12 +9,25 @@ interface user {
 
 /*
 
-  Metodos;
+  Metodos para login:
   login = POST /auth/login
-  getProfile = GET /auth/profile
+  getProfile = POST /auth/profile
+  logout = POST /auth/logout
+
+  Metodos para users:
+
+  Metodos para careers:
+
+  Metodos para types y categories:
+
+  Metodos para tickets:
+  getTickets = GET /tickets
+
+  Metodos para KPIs:
 
 */
 
+// Realizar el login
 export const login = async (cuerpo : user) => {
   try {
     const response = await fetch(`${API}/auth/login`, {
@@ -32,6 +45,7 @@ export const login = async (cuerpo : user) => {
   }
 };
 
+// Obtener el usuario
 export const getProfile = async (cuerpo : user) => {
   try {
     const response = await fetch(`${API}/auth/profile`, {
@@ -49,6 +63,7 @@ export const getProfile = async (cuerpo : user) => {
   }
 };
 
+// Realizar el logout
 export const logout = async (cuerpo : user) => {
   try {
     const response = await fetch(`${API}/auth/logout`, {
@@ -57,6 +72,23 @@ export const logout = async (cuerpo : user) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Obtener todos los tickets
+export const getTickets = async () => {
+  try {
+    const response = await fetch(`${API}/tickets`, {
+      method: 'GET', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
     })
     const data = response.json();
     return data;
