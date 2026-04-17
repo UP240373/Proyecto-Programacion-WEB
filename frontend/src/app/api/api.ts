@@ -7,6 +7,12 @@ interface user {
   password?: string
 }
 
+interface career {
+  id?: number,
+  name?: string,
+  active?: boolean
+}
+
 interface ticket {
   id?: number,
   title?: string,
@@ -29,6 +35,8 @@ interface ticket {
   getUsers = GET /users
 
   Metodos para careers:
+  getCareers = GET /careers
+  deleteCareers = DELETE /careers/:id
 
   Metodos para types y categories:
   getTypes = GET /types
@@ -38,7 +46,7 @@ interface ticket {
   createTicket = POST /tickets
   getTicket = GET /tickets/:id
   updateTicket = PUT /tickets/:id
-  deleteTicket = DELETE /tickets
+  deleteTicket = DELETE /tickets/:id
   assignTicket = POST /tickets/assign
 
   Metodos para KPIs:
@@ -113,6 +121,77 @@ export const getUsers = async () => {
   }
   catch (err) {
     console.error("Algo salio mal", err)
+  }
+};
+
+// Obtener todas las carreras
+export const getCareers = async () => {
+  try {
+    const response = await fetch(`${API}/careers`, {
+      method: 'GET', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err);
+    throw err;
+  }
+};
+
+// Actualizar un carrera
+export const updateCareer = async (id : number, cuerpo : career) => {
+  try {
+    const response = await fetch(`${API}/careers/${id}`, {
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Crear una nueva carrera
+export const createCareer = async (cuerpo : career) => {
+  try {
+    const response = await fetch(`${API}/careers`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Borrar una carrera
+export const deleteCareer = async (cuerpo : career) => {
+  try {
+    const response = await fetch(`${API}/careers/${cuerpo.id}`, {
+      method: 'DELETE', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err);
   }
 };
 

@@ -446,7 +446,7 @@ app.delete('/careers/:id', (req, res) => {
         logger.error('DELETE_CAREER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.deleteCareer(req.params.id, careerToDelete, req.ip, req.headers['user-agent']);
+      logger.deleteCareer(req.params.id, req.params.id, req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The career has been deleted." });
     });
   });

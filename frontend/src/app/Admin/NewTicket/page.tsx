@@ -81,7 +81,6 @@ export default function Page() {
     }
   };
 
-  // title, description, status, priority
   // Metodo para crear un ticket
   const onCreateTicket = async () => {
 
@@ -106,7 +105,6 @@ export default function Page() {
       created_by: user?.id,
     }
 
-    console.log(newTicket);
     try {
       const response = await createTicket(newTicket);
       setMessage(response.message);
@@ -160,7 +158,7 @@ export default function Page() {
         </select>
       </div>
 
-      <button onClick={onCreateTicket}>Crear ticket</button>
+      <button onClick={onCreateTicket}>Create ticket</button>
     </div>
   );
 }

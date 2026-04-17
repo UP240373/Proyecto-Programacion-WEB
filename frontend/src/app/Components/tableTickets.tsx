@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { getTickets, deleteTicket } from '../api/api';
 import { useEffect, useState } from 'react';
 
+// Estructura de un ticket
 interface Ticket {
   id: number,
   title: string,
@@ -101,8 +102,8 @@ export default function TableTickets({ticketsParams} : tableParams) {
             <td>{ticket.created_at.split('T')[0]}</td>
             <td>
               <button onClick={() => onModifyTickets("Assign", String(ticket.id))}>Assign</button>
-              <button onClick={() => onModifyTickets("Update", String(ticket.id))}>Editar</button>
-              <button onClick={() => onDeleteTicket(ticket.id)}>Eliminar</button>
+              <button onClick={() => onModifyTickets("Update", String(ticket.id))}>Edit</button>
+              <button onClick={() => onDeleteTicket(ticket.id)}>Delete</button>
             </td>
           </tr>
         ))}

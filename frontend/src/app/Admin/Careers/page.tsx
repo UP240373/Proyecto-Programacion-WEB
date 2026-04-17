@@ -5,7 +5,9 @@
 // Importanciones para la pagina
 import { useEffect, useState } from "react";
 import { getProfile } from "@/app/api/api";
+import { useRouter } from 'next/navigation';
 import Sidebar from "../../Components/sidebar"
+import TableCareers from "@/app/Components/tableCareers";
 
 // Estructura del usuario
 interface User {
@@ -23,6 +25,9 @@ interface User {
 }
 
 export default function Page() {
+
+  // Movimiento entre rutas
+  const router = useRouter();
 
   // Nombres de pestañas
   const options = ['Home', 'Devs', 'Careers', 'Types', 'Metrics'];
@@ -57,7 +62,13 @@ export default function Page() {
   return (
     <div>
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
-      <p>Careers</p>
+      
+      <div>
+        <p>All of the careers</p>
+        <button onClick={() => router.push(`./Careers/NewCareer`)}>Create new career</button>
+      </div>
+
+      <TableCareers/>
     </div>
   );
 }

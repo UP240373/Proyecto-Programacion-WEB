@@ -114,12 +114,16 @@ Existen 2 roles principales que podran interactuar con la pagina. El primero es:
 
 1. Admin  
 Este usuario sera capaz de:  
+ - Ver todas las carreras disponibles
+ - Generar una nueva carrera
+ - Modificar informacion de una carrera
+ - Eliminar una carrera (de manera logica)
  - Ver todos los tickets realizados
  - Generar un nuevo ticket
  - Modificar informacion de un ticket
  - Eliminar un ticket (de manera logica)
  - Asignar tickets a devs
 
-1. Dev
+1. Dev  
 Este usuario sera capaz de:
  -  

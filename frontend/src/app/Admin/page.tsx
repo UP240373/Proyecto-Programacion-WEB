@@ -102,7 +102,7 @@ export default function Page() {
       
       <div>
         <p> Bienvenida {user?.name}</p>
-        <button onClick={() => onModifyTickets('NewTicket')}>Generar nuevo ticket</button>
+        <button onClick={() => onModifyTickets('NewTicket')}>Create new ticket</button>
       </div>
 
       <TableTickets ticketsParams={tickets}/>
