@@ -14,7 +14,7 @@ app.use(express.json());
 // middlware para usar metodos en frontend configurando cors
 app.use(cors({
     origin: 'http://localhost:3001', // El puerto de Next.js
-    methods: ['GET', 'POST', 'PUT', 'PATCH'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     credentials: true
 }));
 
@@ -564,7 +564,7 @@ app.get('/categories', (req, res) => {
 
 // GET /tickets = Obtener todos los tickets
 app.get('/tickets', (req, res) => {
-  const query = `SELECT t.*, ty.type AS type, u.name AS created_by_name FROM tickets t LEFT JOIN types ty ON t.type_id = ty.id LEFT JOIN users u ON t.created_by = u.id WHERE t.is_deleted = 0`;
+  const query = `SELECT t.*, ty.type AS type, u.name AS created_by_name, GROUP_CONCAT(DISTINCT asignados.name SEPARATOR ', ') AS assigned_to FROM tickets t LEFT JOIN types ty ON t.type_id = ty.id LEFT JOIN users u ON t.created_by = u.id LEFT JOIN tickets_devs td ON t.id = td.id_ticket LEFT JOIN users asignados ON td.id_user = asignados.id WHERE t.is_deleted = 0 GROUP BY t.id, ty.type, u.name`;
 
   db.query(query, (err, tickets) => {
     if (err) {
@@ -620,8 +620,7 @@ app.get('/tickets/filter', (req, res) => {
 
 // GET /tickets/{id} = Obtener ticket por ID
 app.get('/tickets/:id', (req, res) => {
-  const query = `SELECT * FROM tickets WHERE id = ${req.params.id} AND is_deleted = 0`;
-
+  const query = `SELECT t.*, ty.type AS type, u.name AS created_by_name, GROUP_CONCAT(DISTINCT asignados.name SEPARATOR ', ') AS assigned_to FROM tickets t LEFT JOIN types ty ON t.type_id = ty.id LEFT JOIN users u ON t.created_by = u.id LEFT JOIN tickets_devs td ON t.id = td.id_ticket LEFT JOIN users asignados ON td.id_user = asignados.id WHERE t.id = ${req.params.id} AND t.is_deleted = 0 GROUP BY t.id, ty.type, u.name`;
   db.query(query, (err, ticket) => {
     if (err) {
       logger.error('GET_TICKET_BY_ID', err, req.ip);
@@ -710,7 +709,7 @@ app.put('/tickets/:id', (req, res) => {
     }
 
     const newChanges = req.body;
-    const query = `UPDATE tickets SET title = "${newChanges.title}", description = "${newChanges.description}", type_id = "${newChanges.type_id}", status = "${newChanges.status}", priority = "${newChanges.priority}", created_by = ${newChanges.created_by} WHERE id = ${req.params.id}`;
+    const query = `UPDATE tickets SET title = "${newChanges.title}", description = "${newChanges.description}", type_id = "${newChanges.type_id}", status = "${newChanges.status}", priority = "${newChanges.priority}" WHERE id = ${req.params.id}`;
     db.query(query, (err, result) => {
       if (err) {
         logger.error('UPDATE_TICKET', err, req.ip);

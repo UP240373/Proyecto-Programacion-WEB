@@ -5,7 +5,9 @@
 // Importanciones para la pagina
 import { useEffect, useState } from "react";
 import { getProfile, getTickets } from "../api/api";
+import { useRouter } from 'next/navigation';
 import Sidebar from "../Components/sidebar";
+import TableTickets from "../Components/tableTickets";
 
 // Estructura del usuario
 interface User {
@@ -31,13 +33,17 @@ interface Ticket {
   status: string,
   priority: string,
   created_by_name: string,
+  assigned_to: string,
   created_at: string
 }
 
 export default function Page() {
 
+  // Movimiento entre rutas
+  const router = useRouter();
+
   // Nombres de pestañas
-  const options = ['Devs', 'Careers', 'Types', 'Metrics'];
+  const options = ['Home', 'Devs', 'Careers', 'Types', 'Metrics'];
 
   // Datos del usuario
   const [user, setUser] = useState<User>();
@@ -54,61 +60,52 @@ export default function Page() {
     const profile = {
       id: Number(id)
     }
-    const response = await getProfile(profile);
-    setUser(response.user[0]);
+
+    try {
+      const response = await getProfile(profile);
+      if (response.error) {
+        console.error(response.error);
+        return;
+      }
+      setUser(response.user[0]);
+    }
+    catch (err) {
+      console.error(err);
+    }
   };
 
   // Metodo para obtener todos los tickets
   const onGetTickets = async () => {
-    const response = await getTickets();
-    if (response.error) {
-      console.error(response.error);
-      return;
+    try {
+      const response = await getTickets();
+      if (response.error) {
+        console.error(response.error);
+        return;
+      }
+      setTickets(response.tickets);
     }
-    setTickets(response.tickets);
+    catch (err) {
+      console.error(err);
+    }
+    
+    
+  };
+
+  // Metodo para redireccionar a una pagina y modificar la tabla tickets
+  const onModifyTickets = async (action : string) => {
+    router.push(`../Admin/${action}`);
   };
 
   return (
     <div>
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
-      <p> Bienvenida {user?.name}</p>
+      
+      <div>
+        <p> Bienvenida {user?.name}</p>
+        <button onClick={() => onModifyTickets('NewTicket')}>Generar nuevo ticket</button>
+      </div>
 
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Priority</th>
-            <th>Created by</th>
-            <th>Created at</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {tickets.map((ticket) => (
-            <tr key={ticket.id}>
-              <td>{ticket.id}</td>
-              <td>{ticket.title}</td>
-              <td>{ticket.description}</td>
-              <td>{ticket.type}</td>
-              <td>{ticket.status}</td>
-              <td>{ticket.priority}</td>
-              <td>{ticket.created_by_name}</td>
-              <td>{ticket.created_at.split('T')[0]}</td>
-              <td>
-                <button>Assign</button>
-                <button>Editar</button>
-                <button>Eliminar</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-        
-      </table>
+      <TableTickets ticketsParams={tickets}/>
     </div>
   )
 }

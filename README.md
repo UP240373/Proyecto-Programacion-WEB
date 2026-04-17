@@ -2,22 +2,37 @@
 ## Estructura del proyecto
 Project/  
 ├── backend/  
-│ ├── db.js  
-│ └── setpoints.js  
+│   ├── db.js  
+│   └── setpoints.js  
 ├── frontend/  
-│ ├── public/  
-│ ├── src/app/  
-│ │ ├── Admin/  
-│ │ └── page.tsx  
-│ │ ├── api/  
-│ │ └── api.ts  
-│ │ ├── Components/  
-│ │ └── sidebar.tsx  
-│ │ ├── Dev/  
-│ │ └── page.tsx  
-│ │ ├── layout.tsx  
-│ │ └── page.tsx  
-│ └── .gitignore  
+│   ├── public/  
+│   ├── src/  
+│   │   ├── app/  
+│   │   │   ├── Admin/  
+│   │   │   │   ├── Assign/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   ├── Careers/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   ├── Devs/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   ├── Metrics/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   ├── NewTicket/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   ├── Types/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   ├── Update/  
+│   │   │   │   │   └── page.tsx  
+│   │   │   │   └── page.tsx  
+│   │   │   ├── api/  
+│   │   │   │   └── api.ts  
+│   │   │   ├── Components/  
+│   │   │   │   ├── sidebar.tsx  
+│   │   │   │   └── tableTickets.tsx  
+│   │   │   ├── Dev/  
+│   │   │   │   └── page.tsx  
+│   │   │   ├── layout.tsx  
+│   │   │   └── page.tsx  
 ├── .env.example  
 ├── .gitignore  
 ├── package-lock.json  
@@ -99,8 +114,12 @@ Existen 2 roles principales que podran interactuar con la pagina. El primero es:
 
 1. Admin  
 Este usuario sera capaz de:  
- -  Ver todos los tickets realizados
+ - Ver todos los tickets realizados
+ - Generar un nuevo ticket
+ - Modificar informacion de un ticket
+ - Eliminar un ticket (de manera logica)
+ - Asignar tickets a devs
 
-2. Dev
+1. Dev
 Este usuario sera capaz de:
  -  
