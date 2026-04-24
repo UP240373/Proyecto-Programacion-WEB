@@ -66,6 +66,8 @@ interface ticket {
   assignTicket = POST /tickets/assign
 
   Metodos para KPIs:
+  getTicketsByStatus = GET /kpi/tickets/status
+  getTicketsByUsers = GET /kpi/tickets/user
 
 */
 
@@ -456,6 +458,7 @@ export const deleteTicket = async (cuerpo : ticket) => {
   }
 };
 
+// Asignar ticket a un usuario
 export const assignTicket = async (id_ticket : number, id_user : number) => {
   const cuerpo = {
     id_ticket: id_ticket,
@@ -469,6 +472,40 @@ export const assignTicket = async (id_ticket : number, id_user : number) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Obtener todos los tickets ordenador por estado
+export const getTicketsByStatus = async () => {
+  try {
+    const response = await fetch(`${API}/kpi/tickets/status`, {
+      method: 'GET', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Obtener todos los tickets ordenador por usuario
+export const getTicketsByUsers = async () => {
+  try {
+    const response = await fetch(`${API}/kpi/tickets/user`, {
+      method: 'GET', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
     })
     const data = response.json();
     return data;

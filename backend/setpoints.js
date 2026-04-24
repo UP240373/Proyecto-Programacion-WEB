@@ -806,7 +806,7 @@ app.get('/tickets/user/:id', (req, res) => {
 
 // GET /kpi/tickets/status = Tickets por estado
 app.get('/kpi/tickets/status', (req, res) => {
-  const query = `SELECT * FROM tickets WHERE is_deleted = 0 ORDER BY status DESC`;
+  const query = `SELECT t.*, ty.type AS type, u.name AS created_by_name, GROUP_CONCAT(DISTINCT asignados.name SEPARATOR ', ') AS assigned_to FROM tickets t LEFT JOIN types ty ON t.type_id = ty.id LEFT JOIN users u ON t.created_by = u.id LEFT JOIN tickets_devs td ON t.id = td.id_ticket LEFT JOIN users asignados ON td.id_user = asignados.id WHERE t.is_deleted = 0 GROUP BY t.id, ty.type, u.name ORDER BY status DESC;`;
 
   db.query(query, (err, tickets) => {
     if (err) {
@@ -826,7 +826,7 @@ app.get('/kpi/tickets/status', (req, res) => {
 
 // GET /kpi/tickets/user = Tickets por usuario
 app.get('/kpi/tickets/user', (req, res) => {
-  const query = `SELECT GROUP_CONCAT(u.name SEPARATOR ', ') as usuario_asignado, t.* FROM tickets t LEFT JOIN tickets_devs td ON t.id = td.id_ticket LEFT JOIN users u ON td.id_user = u.id GROUP BY t.id ORDER BY u.name ASC`;
+  const query = `SELECT t.*, ty.type AS type, u.name AS created_by_name, GROUP_CONCAT(DISTINCT asignados.name SEPARATOR ', ') AS assigned_to FROM tickets t LEFT JOIN types ty ON t.type_id = ty.id LEFT JOIN users u ON t.created_by = u.id LEFT JOIN tickets_devs td ON t.id = td.id_ticket LEFT JOIN users asignados ON td.id_user = asignados.id WHERE t.is_deleted = 0 GROUP BY t.id, ty.type, u.name ORDER BY u.name ASC;`;
 
   db.query(query, (err, tickets) => {
     if (err) {

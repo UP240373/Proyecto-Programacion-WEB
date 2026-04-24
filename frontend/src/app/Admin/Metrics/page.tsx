@@ -6,6 +6,8 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "@/app/api/api";
 import Sidebar from "../../Components/sidebar"
+import TableOrderByUsers from "@/app/Components/tableOrderByUsers";
+import TableOrderByStatus from "@/app/Components/tableOrderByStatus";
 
 // Estructura del usuario
 interface User {
@@ -57,7 +59,18 @@ export default function Page() {
   return (
     <div>
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
-      <p>Metrics</p>
+
+      <div style={{display: 'flex', flexDirection: 'row'}}>
+        <div>
+          <p>Tickets in order by users</p>
+          <TableOrderByUsers/>
+        </div>
+
+        <div>
+          <p>Tickets in order by status</p>
+          <TableOrderByStatus/>
+        </div>
+      </div>
     </div>
   );
 }
