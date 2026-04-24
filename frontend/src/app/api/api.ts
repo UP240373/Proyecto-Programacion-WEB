@@ -33,9 +33,15 @@ interface ticket {
 
   Metodos para users:
   getUsers = GET /users
+  getUser = GET /users/:id
+  createUser = POST /users
+  updateUser = PUT /users/:id
+  deleteUser = DELETE /users/:id
 
   Metodos para careers:
   getCareers = GET /careers
+  createCareer = POST /careers
+  updateCareer = PUT /careers/:id
   deleteCareers = DELETE /careers/:id
 
   Metodos para types y categories:
@@ -121,6 +127,76 @@ export const getUsers = async () => {
   }
   catch (err) {
     console.error("Algo salio mal", err)
+  }
+};
+
+// Obtener un usuario en especifico
+export const getUser = async (cuerpo : user) => {
+  try {
+    const response = await fetch(`${API}/users/${cuerpo.id}`, {
+      method: 'GET', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Crear un nuevo usuario
+export const createUser = async (cuerpo : user) => {
+  try {
+    const response = await fetch(`${API}/users`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Actualizar un usuario
+export const updateUser = async (id : number, cuerpo : user) => {
+  try {
+    const response = await fetch(`${API}/users/${id}`, {
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Borrar un usuario
+export const deleteUser = async (cuerpo : user) => {
+  try {
+    const response = await fetch(`${API}/users/${cuerpo.id}`, {
+      method: 'DELETE', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err);
   }
 };
 
@@ -247,6 +323,7 @@ export const createTicket = async (cuerpo : ticket) => {
   }
 };
 
+// Obtener un usuario en especifico
 export const getTicket = async (cuerpo : ticket) => {
   try {
     const response = await fetch(`${API}/tickets/${cuerpo.id}`, {

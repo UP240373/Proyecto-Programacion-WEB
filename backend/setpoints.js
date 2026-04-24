@@ -320,7 +320,7 @@ app.delete('/users/:id', (req, res) => {
         logger.error('DELETE_USER', err, req.ip);
         return res.status(500).json({ error: "Database error", err });
       }
-      logger.deleteUser(req.params.id, userToDelete, req.ip, req.headers['user-agent']);
+      logger.deleteUser(req.params.id, result[0], req.ip, req.headers['user-agent']);
       res.status(200).json({ message: "The user has been deleted." });
     });
   });

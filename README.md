@@ -18,6 +18,10 @@ Project/
 │   │   │   │   │   │   └── page.tsx  
 │   │   │   │   │   └── page.tsx  
 │   │   │   │   ├── Devs/  
+│   │   │   │   │   ├── NewDev/  
+│   │   │   │   │   │   └── page.tsx  
+│   │   │   │   │   ├── Update/  
+│   │   │   │   │   │   └── page.tsx  
 │   │   │   │   │   └── page.tsx  
 │   │   │   │   ├── Metrics/  
 │   │   │   │   │   └── page.tsx  
@@ -33,6 +37,7 @@ Project/
 │   │   │   ├── Components/  
 │   │   │   │   ├── sidebar.tsx  
 │   │   │   │   ├── tableCareers.tsx    
+│   │   │   │   ├── tableDevs.tsx  
 │   │   │   │   ├── tableTickets.tsx  
 │   │   │   │   └── tableTicketsByUsers.tsx  
 │   │   │   ├── Dev/  
@@ -119,7 +124,11 @@ Aqui se encuentran todos los endpoints que se pueden realizar dentro del program
 Existen 2 roles principales que podran interactuar con la pagina. El primero es:
 
 1. Admin  
-Este usuario sera capaz de:  
+Este usuario sera capaz de: 
+ - Ver todos los usuarios
+ - Generar un nuevo usuario
+ - Modificar informacion de un usuario
+ - Eliminar un usuario (de manera logica) 
  - Ver todas las carreras disponibles
  - Generar una nueva carrera
  - Modificar informacion de una carrera
