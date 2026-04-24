@@ -6,6 +6,7 @@
 import { useEffect, useState } from "react";
 import { getProfile } from "../api/api";
 import Sidebar from "../Components/sidebar";
+import TableTicketsByUsers from "../Components/tableTicketsByUsers";
 
 // Estructura del usuario
 interface User {
@@ -45,7 +46,14 @@ export default function Page() {
   return (
     <div>
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name}/>
-      <p> Bienvenida {user?.name}</p>
+
+      <div>
+        <p> Bienvenida {user?.name}</p>
+        <button>Edit my account</button>
+      </div>
+
+      <TableTicketsByUsers name={user?.name}/>
+
     </div>
   )
 }

@@ -12,6 +12,10 @@ Project/
 │   │   │   │   ├── Assign/  
 │   │   │   │   │   └── page.tsx  
 │   │   │   │   ├── Careers/  
+│   │   │   │   │   ├── NewCareer/  
+│   │   │   │   │   │   └── page.tsx  
+│   │   │   │   │   ├── Update/  
+│   │   │   │   │   │   └── page.tsx  
 │   │   │   │   │   └── page.tsx  
 │   │   │   │   ├── Devs/  
 │   │   │   │   │   └── page.tsx  
@@ -28,7 +32,9 @@ Project/
 │   │   │   │   └── api.ts  
 │   │   │   ├── Components/  
 │   │   │   │   ├── sidebar.tsx  
-│   │   │   │   └── tableTickets.tsx  
+│   │   │   │   ├── tableCareers.tsx    
+│   │   │   │   ├── tableTickets.tsx  
+│   │   │   │   └── tableTicketsByUsers.tsx  
 │   │   │   ├── Dev/  
 │   │   │   │   └── page.tsx  
 │   │   │   ├── layout.tsx  
@@ -126,4 +132,5 @@ Este usuario sera capaz de:
 
 1. Dev  
 Este usuario sera capaz de:
- -  
+ - Ver todos los tickets asignados para cada uno  
+ - Cambiar el estado del ticket

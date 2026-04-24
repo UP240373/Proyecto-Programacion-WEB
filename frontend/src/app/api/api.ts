@@ -263,6 +263,24 @@ export const getTicket = async (cuerpo : ticket) => {
   }
 };
 
+// Cambiar estado de un ticket
+export const changeStatusTicket = async (id : number, cuerpo : ticket) => {
+  try {
+    const response = await fetch(`${API}/tickets/${id}/status`, {
+      method: 'PATCH', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
 // Actualizar un ticket
 export const updateTicket = async (id : number, cuerpo : ticket) => {
   try {
