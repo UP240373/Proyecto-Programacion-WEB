@@ -13,6 +13,13 @@ interface career {
   active?: boolean
 }
 
+interface type {
+  id?: number,
+  type?: string,
+  description?: string,
+  area?: string
+}
+
 interface ticket {
   id?: number,
   title?: string,
@@ -46,6 +53,9 @@ interface ticket {
 
   Metodos para types y categories:
   getTypes = GET /types
+  createType = POST /types
+  updateType = PUT /types/:id
+  deleteType = DELETE /types/:id
 
   Metodos para tickets:
   getTickets = GET /tickets
@@ -285,6 +295,59 @@ export const getTypes = async () => {
   }
   catch (err) {
     console.error("Algo salio mal", err)
+  }
+};
+
+// Crear una nuevo tipo
+export const createType = async (cuerpo : type) => {
+  try {
+    const response = await fetch(`${API}/types`, {
+      method: 'POST', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Actualizar un tipo
+export const updateType = async (id : number, cuerpo : type) => {
+  try {
+    const response = await fetch(`${API}/types/${id}`, {
+      method: 'PUT', 
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cuerpo)
+    })
+    const data = response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err)
+  }
+};
+
+// Borrar un tipo
+export const deleteType = async (cuerpo : type) => {
+  try {
+    const response = await fetch(`${API}/types/${cuerpo.id}`, {
+      method: 'DELETE', 
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    const data = await response.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Algo salio mal", err);
   }
 };
 

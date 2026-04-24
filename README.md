@@ -28,6 +28,10 @@ Project/
 │   │   │   │   ├── NewTicket/  
 │   │   │   │   │   └── page.tsx  
 │   │   │   │   ├── Types/  
+│   │   │   │   │   ├── NewType/  
+│   │   │   │   │   │   └── page.tsx  
+│   │   │   │   │   ├── Update/  
+│   │   │   │   │   │   └── page.tsx  
 │   │   │   │   │   └── page.tsx  
 │   │   │   │   ├── Update/  
 │   │   │   │   │   └── page.tsx  
@@ -39,7 +43,8 @@ Project/
 │   │   │   │   ├── tableCareers.tsx    
 │   │   │   │   ├── tableDevs.tsx  
 │   │   │   │   ├── tableTickets.tsx  
-│   │   │   │   └── tableTicketsByUsers.tsx  
+│   │   │   │   ├── tableTicketsByUsers.tsx  
+│   │   │   │   └── tableTypes.tsx  
 │   │   │   ├── Dev/  
 │   │   │   │   └── page.tsx  
 │   │   │   ├── layout.tsx  
@@ -133,6 +138,10 @@ Este usuario sera capaz de:
  - Generar una nueva carrera
  - Modificar informacion de una carrera
  - Eliminar una carrera (de manera logica)
+ - Ver todos los tipos disponibles
+ - Generar un nuevo tipo
+ - Modificar informacion de un tipo
+ - Eliminar un tipo (de manera logica)
  - Ver todos los tickets realizados
  - Generar un nuevo ticket
  - Modificar informacion de un ticket

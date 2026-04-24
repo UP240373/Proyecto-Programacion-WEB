@@ -43,7 +43,7 @@ export default function Home() {
     const response = await login(profile);
     if (response.success == false) {
       setError(response.error);
-      return console.log(response.error);
+      return console.error(response.error);
     }
 
     // Determina que tipo de usuario es

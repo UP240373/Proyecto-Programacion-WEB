@@ -5,7 +5,9 @@
 // Importanciones para la pagina
 import { useEffect, useState } from "react";
 import { getProfile } from "@/app/api/api";
+import { useRouter } from 'next/navigation';
 import Sidebar from "../../Components/sidebar"
+import TableTypes from "../../Components/tableTypes"
 
 // Estructura del usuario
 interface User {
@@ -23,6 +25,9 @@ interface User {
 }
 
 export default function Page() {
+
+  // Movimiento entre rutas
+  const router = useRouter();
 
   // Nombres de pestañas
   const options = ['Home', 'Devs', 'Careers', 'Types', 'Metrics'];
@@ -57,7 +62,14 @@ export default function Page() {
   return (
     <div>
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
-      <p>Types</p>
+      
+      <div>
+        <p>All of the types</p>
+        <button onClick={() => router.push(`./Types/NewType`)}>Create new type</button>
+      </div>
+
+      <TableTypes/>
+
     </div>
   );
 }
