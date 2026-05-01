@@ -97,12 +97,12 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
       
       <div>
-        <p> Bienvenida {user?.name}</p>
-        <button onClick={() => onModifyTickets('NewTicket')}>Create new ticket</button>
+        <p className="title"> Welcome {user?.name}</p>
+        <button onClick={() => onModifyTickets('NewTicket')} className="bottonCreate">Create new ticket</button>
       </div>
 
       <TableTickets ticketsParams={tickets}/>

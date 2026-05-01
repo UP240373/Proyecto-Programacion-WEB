@@ -59,36 +59,43 @@ export default function Page() {
   };
   
   return (
-    <div>
-      <button onClick={() => router.push('../../Admin/Types')}>Regresar</button>
+    <div className="main">
+      <button onClick={() => router.push('../../Admin/Types')} className="bottonReturn">Return</button>
 
-      <p>{message}</p>
+      <h1 className="message" style={{ color: 'var(--color1)' }}>{message}</h1>
 
-      <div>
-        <label>Type:</label><br/>
-        <input 
-          value={type} 
-          onChange={(e) => setType(e.target.value)}
-        ></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Type:</label><br/>
+          <input 
+            value={type} 
+            onChange={(e) => setType(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Description:</label><br/>
+          <textarea 
+            value={description} 
+            onChange={(e) => setDescription(e.target.value)}
+            className="textAreaInfo"
+          ></textarea>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Area:</label><br/>
+          <input 
+            value={area} 
+            onChange={(e) => setArea(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
       </div>
 
-      <div>
-        <label>Description:</label><br/>
-        <textarea 
-          value={description} 
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={onCreateType} className="bottonInfo">Create type</button>
       </div>
-
-      <div>
-        <label>Area:</label><br/>
-        <input 
-          value={area} 
-          onChange={(e) => setArea(e.target.value)}
-        ></input>
-      </div>
-
-      <button onClick={onCreateType}>Create type</button>
     </div>
   );
 }

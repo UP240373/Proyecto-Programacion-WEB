@@ -3,24 +3,9 @@
 'use client'
 
 // Importanciones para la pagina
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { login } from "./api/api";
 import { useRouter } from 'next/navigation';
-
-// Estructura de cada usuario
-interface User {
-  id: number;
-  name: string;
-  last_name: string;
-  username: string;
-  email: string;
-  career_id: number;
-  active: number;
-  password: string;
-  rol: string;
-  failed_attempts: number;
-  created_at: string;
-}
 
 export default function Home() {
 
@@ -65,29 +50,34 @@ export default function Home() {
   };
 
   return (
-    <main>
-      <div>
-        <div>
-          <label>Enter your email address:</label><br/>
+    <main className="main" style={{ display: 'grid', placeItems: 'center'}}>
+      <div className="login">
+
+        <h1 className="titleLogin">Coworkers Tickets</h1>
+
+        <div className="divInput">
+          <label className="inputText">Email *</label><br/>
           <input 
             value={email} 
             onChange={(e) => setEmail(e.target.value)} 
             placeholder="Email"
+            className="input"
           ></input>
         </div>
 
-        <div>
-          <label>Enter your password</label><br/>
+        <div className="divInput">
+          <label className="inputText">Password *</label><br/>
           <input 
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            className="input"
           ></input>
         </div>
 
-        <button onClick={() => onLogin()}>Login</button>
+        <button onClick={() => onLogin()} className="bottonLogin">Login</button>
 
-        <p>{error}</p>
+        <p className="message">{error}</p>
       </div>
 
     </main>

@@ -2,6 +2,8 @@
 // Importanciones para la pagina
 import { logout } from "../api/api";
 import { useRouter } from 'next/navigation';
+import imageProfil from '../../../public/withoutPhoto.png';
+import Image from "next/image";
 
 interface sidebarParams {
   id: number | undefined,
@@ -42,13 +44,25 @@ export default function Sidebar({ id, name, last_name, options } : sidebarParams
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'row' }}>
-      <p>Imagen del usuario</p>
-      <p>{name} {last_name}</p>
-      {options?.map((option) => (
-        <button key={option} onClick={() => onMoveRoute(option)}>{option}</button>
-      ))}
-      <button onClick={onLogout}>Cerrar Sesion</button>
+    <div className="sidebar" style={{  }}>
+      <div className="sidebarName">
+        <Image
+          src={imageProfil}
+          alt="Imagen del usuario"
+          width={45}
+        />
+        <p>{name} {last_name}</p>
+        </div>
+
+      <div className="sidebarOptions">
+        {options?.map((option) => (
+          <button key={option} onClick={() => onMoveRoute(option)} className="sidebarBottonOptions">{option}</button>
+        ))}
+      </div>
+
+      <div className="sidebarLogout">
+        <button onClick={onLogout} className="sidebarBottonLogout">Log out</button>
+      </div>
     </div>
   )
 }

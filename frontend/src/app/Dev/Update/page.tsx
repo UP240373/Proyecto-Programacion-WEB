@@ -14,7 +14,7 @@ interface Career {
   active: number
 }
 
-// Estructura de un desarrollador
+// Estructura del usuario
 interface User {
   id: number;
   name: string;
@@ -34,7 +34,7 @@ export default function Page() {
   // Movimiento entre rutas
   const router = useRouter();
 
-  // Datos del desarrollador
+  // Datos del usuario
   const [careers, setCareers] = useState<Career[]>([]);
   const [user, setUser] = useState<User>();
   const [name, setName] = useState<string>('');
@@ -46,20 +46,20 @@ export default function Page() {
   const [rol, setRol] = useState<string>('');
 
   useEffect(() => {
-    const DevId = localStorage.getItem('dev_id');
-    onInfoDev(Number(DevId));
+    const userId = localStorage.getItem('user_id');
+    onInfoUser(userId);
   }, []);
 
   // Metodo para obtener los datos del usuario
-  const onInfoDev = async (id : number) => {
+  const onInfoUser = async (id : string | null) => {
 
     const careersRequest = await getCareers();
     setCareers(careersRequest.careers);
 
-    const dev = {
-      id: id
+    const Profile = {
+      id: Number(id)
     }
-    const response = await getUser(dev);
+    const response = await getUser(Profile);
     setUser(response.user[0]);
     setName(response.user[0].name);
     setLastName(response.user[0].last_name);
@@ -75,8 +75,8 @@ export default function Page() {
   };
 
   // Metodo para guardar los cambios
-  const onSaveDev = async () => {
-    const NewDev = {
+  const onSaveUser = async () => {
+    const NewInfo = {
       name: name,
       last_name: lastName,
       username: username,
@@ -87,18 +87,18 @@ export default function Page() {
       rol: rol
     }
 
-    const response = await updateUser(Number(user?.id), NewDev)
+    const response = await updateUser(Number(user?.id), NewInfo)
     if (response.error) {
       console.error(response.error)
     }
 
-    router.push('../../Admin/Devs');
+    router.push('../../Dev');
   };
 
   return (
     <div className="main">
 
-      <button onClick={() => router.push('../../Admin/Devs')} className="bottonReturn">Return</button>
+      <button onClick={() => router.push('../../Dev')} className="bottonReturn">Return</button>
       
       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
         <div className="divInfo">
@@ -164,7 +164,7 @@ export default function Page() {
       </div>
 
       <div style={{ display: 'grid', placeItems: 'center' }}>
-        <button onClick={() => onSaveDev()} className="bottonInfo">Update dev</button>
+        <button onClick={() => onSaveUser()} className="bottonInfo">Save changes</button>
       </div>
     </div>
   );

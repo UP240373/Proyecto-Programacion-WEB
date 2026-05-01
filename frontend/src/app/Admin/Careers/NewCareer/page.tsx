@@ -47,21 +47,26 @@ export default function Page() {
   };
   
   return (
-    <div>
-      <button onClick={() => router.push('../../Admin/Careers')}>Regresar</button>
+    <div className="main">
+      <button onClick={() => router.push('../../Admin/Careers')} className="bottonReturn">Return</button>
 
-      <p>{message}</p>
+      <h1 className="message" style={{ color: 'var(--color1)' }}>{message}</h1>
 
-      <div>
-        <label>Name:</label><br/>
-        <input 
-          value={name} 
-          onChange={(e) => setName(e.target.value)}
-          placeholder="ej. Biologia"
-        ></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Name:</label><br/>
+          <input 
+            value={name} 
+            onChange={(e) => setName(e.target.value)}
+            placeholder="ej. Biologia"
+            className="inputInfo"
+          ></input>
+        </div>
       </div>
 
-      <button onClick={onCreateCareer}>Create career</button>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={onCreateCareer} className="bottonInfo">Create career</button>
+      </div>
     </div>
   );
 }

@@ -72,38 +72,38 @@ export default function TableTickets({ticketsParams} : tableParams) {
   };
 
   return (
-    <table>
+    <table className='table'>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Priority</th>
-          <th>Created by</th>
-          <th>Assign to</th>
-          <th>Created at</th>
-          <th>Actions</th>
+        <tr className='tableTitles'>
+          <th className='tableCells'>ID</th>
+          <th className='tableCells'>Title</th>
+          <th className='tableCells'>Description</th>
+          <th className='tableCells'>Type</th>
+          <th className='tableCells'>Status</th>
+          <th className='tableCells'>Priority</th>
+          <th className='tableCells'>Created by</th>
+          <th className='tableCells'>Assign to</th>
+          <th className='tableCells'>Created at</th>
+          <th className='tableCells'>Actions</th>
         </tr>
       </thead>
 
       <tbody>
         {tickets.map((ticket) => (
           <tr key={ticket.id}>
-            <td>{ticket.id}</td>
-            <td>{ticket.title}</td>
-            <td>{ticket.description}</td>
-            <td>{ticket.type}</td>
-            <td>{ticket.status}</td>
-            <td>{ticket.priority}</td>
-            <td>{ticket.created_by_name}</td>
-            <td>{ticket.assigned_to}</td>
-            <td>{ticket.created_at.split('T')[0]}</td>
-            <td>
-              <button onClick={() => onModifyTickets("Assign", String(ticket.id))}>Assign</button>
-              <button onClick={() => onModifyTickets("Update", String(ticket.id))}>Edit</button>
-              <button onClick={() => onDeleteTicket(ticket.id)}>Delete</button>
+            <td className='tableCells'>{ticket.id}</td>
+            <td className='tableCells'>{ticket.title}</td>
+            <td className='tableCells'>{ticket.description}</td>
+            <td className='tableCells'>{ticket.type}</td>
+            <td className='tableCells'>{ticket.status}</td>
+            <td className='tableCells'>{ticket.priority}</td>
+            <td className='tableCells'>{ticket.created_by_name}</td>
+            <td className='tableCells'>{ticket.assigned_to}</td>
+            <td className='tableCells'>{ticket.created_at.split('T')[0]}</td>
+            <td className='tableCells'>
+              <button className='botton' onClick={() => onModifyTickets("Assign", String(ticket.id))}>Assign</button>
+              <button className='botton' onClick={() => onModifyTickets("Update", String(ticket.id))}>Edit</button>
+              <button className='botton' onClick={() => onDeleteTicket(ticket.id)}>Delete</button>
             </td>
           </tr>
         ))}

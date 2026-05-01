@@ -69,27 +69,27 @@ export default function TableDevs() {
   };
 
   return (
-    <table>
+    <table className='table'>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Area</th>
-          <th>Actions</th>
+          <th className='tableCells'>ID</th>
+          <th className='tableCells'>Type</th>
+          <th className='tableCells'>Description</th>
+          <th className='tableCells'>Area</th>
+          <th className='tableCells'>Actions</th>
         </tr>
       </thead>
 
       <tbody>
         {types?.map((type) => (
           <tr key={type.id}>
-            <td>{type.id}</td>
-            <td>{type.type}</td>
-            <td>{type.description}</td>
-            <td>{type.area}</td>
-            <td>
-              <button onClick={() => onModifyTypes(String(type.id))}>Edit</button>
-              <button onClick={() => onDeleteType(type.id)}>Delete</button>
+            <td className='tableCells'>{type.id}</td>
+            <td className='tableCells'>{type.type}</td>
+            <td className='tableCells'>{type.description}</td>
+            <td className='tableCells'>{type.area}</td>
+            <td className='tableCells'>
+              <button onClick={() => onModifyTypes(String(type.id))} className='botton'>Edit</button>
+              <button onClick={() => onDeleteType(type.id)} className='botton'>Delete</button>
             </td>
           </tr>
         ))}

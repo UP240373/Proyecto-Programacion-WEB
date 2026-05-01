@@ -99,75 +99,61 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
 
-      <button onClick={() => router.push('../../Admin')}>Regresar</button>
+      <button onClick={() => router.push('../../Admin')} className="bottonReturn">Return</button>
 
-      <div>
-        <label>Ticket asignado a:</label><br/>
-        <select value={assign} onChange={(e) => onSaveTicket(Number(e.target.value))}>
-          <option value={0}></option>
-          {users?.map((user) => (
-            <option key={user.id} value={user.id}>{user.rol} - {user.name}</option>
-          ))}
-        </select>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Ticket asignado a:</label><br/>
+          <select value={assign} onChange={(e) => onSaveTicket(Number(e.target.value))} className="selectInfo">
+            <option value={0}></option>
+            {users?.map((user) => (
+              <option key={user.id} value={user.id}>{user.rol} - {user.name}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Ticket's id:</label>
+          <p className="textInfo">{ticket?.id}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Ticket's title:</label>
+          <p className="textInfo">{ticket?.title}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Ticket's description:</label>
+          <p className="textInfo">{ticket?.description}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Ticket's type:</label>
+          <p className="textInfo">{ticket?.type}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Ticket's status:</label>
+          <p className="textInfo">{ticket?.status}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Ticket's priority:</label>
+          <p className="textInfo">{ticket?.priority}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Created by:</label>
+          <p className="textInfo">{ticket?.created_by_name}</p>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Created at:</label>
+          <p className="textInfo">{ticket?.created_at.split('T')[0]}</p>
+        </div>
       </div>
-
-      <div>
-        <label>Ticket's id:</label>
-        <p>{ticket?.id}</p>
-      </div>
-
-      <div>
-        <label>Ticket's title:</label>
-        <p>{ticket?.title}</p>
-      </div>
-
-      <div>
-        <label>Ticket's description:</label>
-        <p>{ticket?.description}</p>
-      </div>
-
-      <div>
-        <label>Ticket's type:</label>
-        <p>{ticket?.type}</p>
-      </div>
-
-      <div>
-        <label>Ticket's status:</label>
-        <p>{ticket?.status}</p>
-      </div>
-
-      <div>
-        <label>Ticket's priority:</label>
-        <p>{ticket?.priority}</p>
-      </div>
-
-      <div>
-        <label>Created by:</label>
-        <p>{ticket?.created_by_name}</p>
-      </div>
-
-      <div>
-        <label>Created at:</label>
-        <p>{ticket?.created_at.split('T')[0]}</p>
-      </div>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Assigned to</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr>
-            <td>
-              
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   );
 }

@@ -117,72 +117,81 @@ export default function Page() {
   };
   
   return (
-    <div>
-      <button onClick={() => router.push('../../Admin/Devs')}>Regresar</button>
+    <div className="main">
+      <button onClick={() => router.push('../../Admin/Devs')} className="bottonReturn">Return</button>
 
-      <p>{message}</p>
+      <h1 className="message" style={{ color: 'var(--color1)' }}>{message}</h1>
 
-      <div>
-        <label>Name:</label><br/>
-        <input 
-          value={name} 
-          onChange={(e) => setName(e.target.value)}
-        ></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Name:</label><br/>
+          <input 
+            value={name} 
+            onChange={(e) => setName(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Last Name:</label><br/>
+          <input 
+            value={lastName} 
+            onChange={(e) => setLastName(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Username:</label><br/>
+          <input 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Email:</label><br/>
+          <input 
+            value={email} 
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="example@gmail.com"
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Career:</label><br/>
+          <select value={careerId} onChange={(e) => setCareerId(Number(e.target.value))} className="selectInfo">
+            <option value={0}>Select a career</option>
+            {careers.map((career) => (
+              <option value={career.id} key={career.id}>{career.active == 1 ? career.name : undefined}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Password:</label><br/>
+          <input 
+            value={password} 
+            onChange={(e) => setPassword(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Rol:</label><br/>
+          <select value={rol} onChange={(e) => setRol(e.target.value)} className="selectInfo">
+            <option value="">Select rol</option>
+            <option value="Admin">Admin</option>
+            <option value="dev">Dev</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label>Last Name:</label><br/>
-        <input 
-          value={lastName} 
-          onChange={(e) => setLastName(e.target.value)}
-        ></input>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={onCreateUser} className="bottonInfo">Create dev</button>
       </div>
-
-      <div>
-        <label>Username:</label><br/>
-        <input 
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)}
-        ></input>
-      </div>
-
-      <div>
-        <label>Email:</label><br/>
-        <input 
-          value={email} 
-          onChange={(e) => setEmail(e.target.value)}
-          placeholder="example@gmail.com"
-        ></input>
-      </div>
-
-      <div>
-        <label>Career:</label><br/>
-        <select value={careerId} onChange={(e) => setCareerId(Number(e.target.value))}>
-          <option value={0}>Select a career</option>
-          {careers.map((career) => (
-            <option value={career.id} key={career.id}>{career.active == 1 ? career.name : undefined}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label>Password:</label><br/>
-        <input 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
-      </div>
-
-      <div>
-        <label>Rol:</label><br/>
-        <select value={rol} onChange={(e) => setRol(e.target.value)}>
-          <option value="">Select rol</option>
-          <option value="Admin">Admin</option>
-          <option value="dev">Dev</option>
-        </select>
-      </div>
-
-      <button onClick={onCreateUser}>Create dev</button>
     </div>
   );
 }

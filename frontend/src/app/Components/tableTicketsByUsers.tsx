@@ -67,39 +67,39 @@ export default function TableTicketsByUsers({ name } : tableParams) {
   }
   
   return (
-    <table>
+    <table className='table'>
       <thead>
         <tr>
-          <th>ID</th>
-          <th>Title</th>
-          <th>Description</th>
-          <th>Type</th>
-          <th>Status</th>
-          <th>Priority</th>
-          <th>Created by</th>
-          <th>Assign to</th>
-          <th>Created at</th>
+          <th className='tableCells'>ID</th>
+          <th className='tableCells'>Title</th>
+          <th className='tableCells'>Description</th>
+          <th className='tableCells'>Type</th>
+          <th className='tableCells'>Status</th>
+          <th className='tableCells'>Priority</th>
+          <th className='tableCells'>Created by</th>
+          <th className='tableCells'>Assign to</th>
+          <th className='tableCells'>Created at</th>
         </tr>
       </thead>
 
       <tbody>
         {tickets.map((ticket) => (
           <tr key={ticket.id}>
-            <td>{ticket.id}</td>
-            <td>{ticket.title}</td>
-            <td>{ticket.description}</td>
-            <td>{ticket.type}</td>
-            <td>
-              <select value={ticket.status} onChange={(e) => onChangeStatus(ticket.id, e.target.value)}>
+            <td className='tableCells'>{ticket.id}</td>
+            <td className='tableCells'>{ticket.title}</td>
+            <td className='tableCells'>{ticket.description}</td>
+            <td className='tableCells'>{ticket.type}</td>
+            <td className='tableCells'>
+              <select value={ticket.status} onChange={(e) => onChangeStatus(ticket.id, e.target.value)} className='selectInfo'>
                 <option value="open">Open</option>
                 <option value="in_progress">In progress</option>
                 <option value="closed">Closed</option>
               </select>
             </td>
-            <td>{ticket.priority}</td>
-            <td>{ticket.created_by_name}</td>
-            <td>{ticket.assigned_to}</td>
-            <td>{ticket.created_at.split('T')[0]}</td>
+            <td className='tableCells'>{ticket.priority}</td>
+            <td className='tableCells'>{ticket.created_by_name}</td>
+            <td className='tableCells'>{ticket.assigned_to}</td>
+            <td className='tableCells'>{ticket.created_at.split('T')[0]}</td>
           </tr>
         ))}
       </tbody>

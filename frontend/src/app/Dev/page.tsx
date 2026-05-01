@@ -5,6 +5,7 @@
 // Importanciones para la pagina
 import { useEffect, useState } from "react";
 import { getProfile } from "../api/api";
+import { useRouter } from 'next/navigation';
 import Sidebar from "../Components/sidebar";
 import TableTicketsByUsers from "../Components/tableTicketsByUsers";
 
@@ -25,6 +26,9 @@ interface User {
 
 export default function Page() {
 
+  // Movimiento entre rutas
+  const router = useRouter();
+
   // Datos del usuario
   const [user, setUser] = useState<User>();
 
@@ -44,12 +48,12 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name}/>
 
       <div>
-        <p> Bienvenida {user?.name}</p>
-        <button>Edit my account</button>
+        <p className="title"> Bienvenida {user?.name}</p>
+        <button onClick={() => router.push('../Dev/Update')} className="bottonCreate">Edit my account</button>
       </div>
 
       <TableTicketsByUsers name={user?.name}/>

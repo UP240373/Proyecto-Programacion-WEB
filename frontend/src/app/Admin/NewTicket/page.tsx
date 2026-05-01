@@ -115,50 +115,56 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
 
-      <button onClick={() => router.push('../../Admin')}>Regresar</button>
+      <button onClick={() => router.push('../../Admin')} className="bottonReturn">Return</button>
 
-      <p>{message}</p>
+      <h1 className="message" style={{ color: 'var(--color1)' }}>{message}</h1>
 
-      <div>
-        <label>Title:</label><br/>
-        <input 
-          value={title} 
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="ej. Fallos de conexion en mi computadora"
-        ></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Title:</label><br/>
+          <input 
+            value={title} 
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="ej. Fallos de conexion en mi computadora"
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Description:</label><br/>
+          <textarea
+            value={description} 
+            onChange={(e) => setDescription(e.target.value)}
+            className="textAreaInfo"
+          ></textarea>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Type:</label><br/>
+          <select value={type} onChange={(e) => setType(Number(e.target.value))} className="selectInfo">
+            <option value={0}></option>
+            {types?.map((type) => (
+              <option key={type.id} value={type.id}>{type.type}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Priority:</label><br/>
+          <select value={priority} onChange={(e) => setPriority(e.target.value)} className="selectInfo">
+            <option></option>
+            <option value={"low"}>low</option>
+            <option value={"medium"}>medium</option>
+            <option value={"high"}>high</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label>Description:</label><br/>
-        <textarea
-          value={description} 
-          onChange={(e) => setDescription(e.target.value)}
-        ></textarea>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={onCreateTicket} className="bottonInfo">Create ticket</button>
       </div>
-
-      <div>
-        <label>Type:</label><br/>
-        <select value={type} onChange={(e) => setType(Number(e.target.value))}>
-          <option value={0}></option>
-          {types?.map((type) => (
-            <option key={type.id} value={type.id}>{type.type}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label>Priority:</label><br/>
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option></option>
-          <option value={"low"}>low</option>
-          <option value={"medium"}>medium</option>
-          <option value={"high"}>high</option>
-        </select>
-      </div>
-
-      <button onClick={onCreateTicket}>Create ticket</button>
     </div>
   );
 }

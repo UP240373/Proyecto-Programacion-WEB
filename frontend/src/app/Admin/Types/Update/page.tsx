@@ -62,32 +62,42 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
 
-      <button onClick={() => router.push('../../Admin/Types')}>Regresar</button>
+      <button onClick={() => router.push('../../Admin/Types')} className="bottonReturn">Return</button>
       
-      <div>
-        <label>Type:</label><br/>
-        <input 
-          value={newType}
-          onChange={(e) => setNewType(e.target.value)}></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Type:</label><br/>
+          <input 
+            value={newType}
+            onChange={(e) => setNewType(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Description:</label><br/>
+          <textarea 
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="textAreaInfo"
+          ></textarea>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Area:</label><br/>
+          <input 
+            value={area}
+            onChange={(e) => setArea(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
       </div>
 
-      <div>
-        <label>Description:</label><br/>
-        <textarea 
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}></textarea>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={() => onSaveType()} className="bottonInfo">Guardar cambios</button>
       </div>
-
-      <div>
-        <label>Area:</label><br/>
-        <input 
-          value={area}
-          onChange={(e) => setArea(e.target.value)}></input>
-      </div>
-
-      <button onClick={() => onSaveType()}>Guardar cambios</button>
     </div>
   );
 }

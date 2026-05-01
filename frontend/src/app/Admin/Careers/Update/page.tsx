@@ -63,28 +63,34 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
 
-      <button onClick={() => router.push('../../Admin/Careers')}>Regresar</button>
+      <button onClick={() => router.push('../../Admin/Careers')} className="bottonReturn">Return</button>
 
-      <p>{message}</p>
+      <h1 className="message" style={{ color: 'var(--color1)' }}>{message}</h1>
       
-      <div>
-        <label>Name:</label><br/>
-        <input 
-          value={name}
-          onChange={(e) => setName(e.target.value)}></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Name:</label><br/>
+          <input 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Active:</label><br/>
+          <select value={active} onChange={(e) => setActive(e.target.value)} className="selectInfo">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label>Active:</label><br/>
-        <select value={active} onChange={(e) => setActive(e.target.value)}>
-          <option value="1">Yes</option>
-          <option value="0">No</option>
-        </select>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={() => onSaveCareer()} className="bottonInfo">Guardar cambios</button>
       </div>
-
-      <button onClick={() => onSaveCareer()}>Guardar cambios</button>
     </div>
   );
 }

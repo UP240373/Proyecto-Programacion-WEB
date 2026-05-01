@@ -68,25 +68,25 @@ export default function TableCareers() {
   };
 
   return (
-    <table>
+    <table className='table'>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Active</th>
-          <th>Actions</th>
+        <tr className='tableTitles'>
+          <th className='tableCells'>ID</th>
+          <th className='tableCells'>Name</th>
+          <th className='tableCells'>Active</th>
+          <th className='tableCells'>Actions</th>
         </tr>
       </thead>
 
       <tbody>
         {careers?.map((career) => (
           <tr key={career.id}>
-            <td>{career.id}</td>
-            <td>{career.name}</td>
-            <td>{career.active == true ? "Active" : "Inactive"}</td>
-            <td>
-              <button onClick={() => onModifyCareers(String(career.id))}>Edit</button>
-              <button onClick={() => onDeleteCareer(career.id)}>Delete</button>
+            <td className='tableCells'>{career.id}</td>
+            <td className='tableCells'>{career.name}</td>
+            <td className='tableCells'>{career.active == true ? "Active" : "Inactive"}</td>
+            <td className='tableCells'>
+              <button onClick={() => onModifyCareers(String(career.id))} className='botton'>Edit</button>
+              <button onClick={() => onDeleteCareer(career.id)} className='botton'>Delete</button>
             </td>
           </tr>
         ))}

@@ -76,37 +76,37 @@ export default function TableDevs() {
   };
 
   return (
-    <table>
+    <table className='table'>
       <thead>
-        <tr>
-          <th>ID</th>
-          <th>Full Name</th>
-          <th>Username</th>
-          <th>Email</th>
-          <th>Career</th>
-          <th>Active</th>
-          <th>Password</th>
-          <th>Rol</th>
-          <th>Created At</th>
-          <th>Actions</th>
+        <tr className='tableTitles'>
+          <th className='tableCells'>ID</th>
+          <th className='tableCells'>Full Name</th>
+          <th className='tableCells'>Username</th>
+          <th className='tableCells'>Email</th>
+          <th className='tableCells'>Career</th>
+          <th className='tableCells'>Active</th>
+          <th className='tableCells'>Password</th>
+          <th className='tableCells'>Rol</th>
+          <th className='tableCells'>Created At</th>
+          <th className='tableCells'>Actions</th>
         </tr>
       </thead>
 
       <tbody>
         {users?.map((user) => (
           <tr key={user.id}>
-            <td>{user.id}</td>
-            <td>{user.name} {user.last_name}</td>
-            <td>{user.username}</td>
-            <td>{user.email}</td>
-            <td>{user.career_id}</td>
-            <td>{user.active == 1 ? "Active" : "Inactive"}</td>
-            <td>{user.password}</td>
-            <td>{user.rol}</td>
-            <td>{user.created_at.split('T')[0]}</td>
-            <td>
-              <button onClick={() => onModifyUsers(String(user.id))}>Edit</button>
-              <button onClick={() => onDeleteUser(user.id)}>Delete</button>
+            <td className='tableCells'>{user.id}</td>
+            <td className='tableCells'>{user.name} {user.last_name}</td>
+            <td className='tableCells'>{user.username}</td>
+            <td className='tableCells'>{user.email}</td>
+            <td className='tableCells'>{user.career_id}</td>
+            <td className='tableCells'>{user.active == 1 ? "Active" : "Inactive"}</td>
+            <td className='tableCells'>{user.password}</td>
+            <td className='tableCells'>{user.rol}</td>
+            <td className='tableCells'>{user.created_at.split('T')[0]}</td>
+            <td className='tableCells'>
+              <button className='botton' onClick={() => onModifyUsers(String(user.id))}>Edit</button>
+              <button className='botton' onClick={() => onDeleteUser(user.id)}>Delete</button>
             </td>
           </tr>
         ))}

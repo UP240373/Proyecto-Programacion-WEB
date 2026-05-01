@@ -91,53 +91,61 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
 
-      <button onClick={() => router.push('../../Admin')}>Regresar</button>
+      <button onClick={() => router.push('../../Admin')} className="bottonReturn">Return</button>
       
-      <div>
-        <label>Title</label><br/>
-        <input 
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}></input>
+      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+        <div className="divInfo">
+          <label className="titleInfo">Title</label><br/>
+          <input 
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="inputInfo"
+          ></input>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Description</label><br/>
+          <textarea 
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="textAreaInfo"
+          ></textarea>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Type</label><br/>
+          <select value={type} onChange={(e) => setType(Number(e.target.value))} className="selectInfo">
+            <option value={0}>Seleccionar un tipo</option>
+            {types.map((type) => (
+              <option key={type.id} value={type.id}>{type.type}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Status</label><br/>
+          <select value={status} onChange={(e) => setStatus(e.target.value)} className="selectInfo">
+            <option value="open">Open</option>
+            <option value="in_progress">In progress</option>
+            <option value="closed">Closed</option>
+          </select>
+        </div>
+
+        <div className="divInfo">
+          <label className="titleInfo">Priority</label><br/>
+          <select value={priority} onChange={(e) => setPriority(e.target.value)} className="selectInfo">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label>Description</label><br/>
-        <textarea 
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}></textarea>
+      <div style={{ display: 'grid', placeItems: 'center' }}>
+        <button onClick={() => onSaveTicket()} className="bottonInfo">Guardar cambios</button>
       </div>
-
-      <div>
-        <label>Type</label><br/>
-        <select value={type} onChange={(e) => setType(Number(e.target.value))}>
-          <option value={0}>Seleccionar un tipo</option>
-          {types.map((type) => (
-            <option key={type.id} value={type.id}>{type.type}</option>
-          ))}
-        </select>
-      </div>
-
-      <div>
-        <label>Status</label><br/>
-        <select value={status} onChange={(e) => setStatus(e.target.value)}>
-          <option value="open">Open</option>
-          <option value="in_progress">In progress</option>
-          <option value="closed">Closed</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Priority</label><br/>
-        <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-          <option value="low">Low</option>
-          <option value="medium">Medium</option>
-          <option value="high">High</option>
-        </select>
-      </div>
-
-      <button onClick={() => onSaveTicket()}>Guardar cambios</button>
     </div>
   );
 }

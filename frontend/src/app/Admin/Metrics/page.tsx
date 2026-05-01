@@ -57,17 +57,17 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
 
       <div style={{display: 'flex', flexDirection: 'row'}}>
-        <div>
-          <p>Tickets in order by users</p>
+        <div style={{ margin: '1%' }}>
+          <p className="title">Tickets in order by users</p>
           <TableOrderByUsers/>
         </div>
 
-        <div>
-          <p>Tickets in order by status</p>
+        <div style={{ margin: '1%' }}>
+          <p className="title">Tickets in order by status</p>
           <TableOrderByStatus/>
         </div>
       </div>

@@ -60,12 +60,12 @@ export default function Page() {
   };
 
   return (
-    <div>
+    <div className="main">
       <Sidebar id={user?.id} name={user?.name} last_name={user?.last_name} options={options}/>
       
       <div>
-        <p>All of the types</p>
-        <button onClick={() => router.push(`./Types/NewType`)}>Create new type</button>
+        <p className="title">All of the types</p>
+        <button onClick={() => router.push(`./Types/NewType`)} className="bottonCreate">Create new type</button>
       </div>
 
       <TableTypes/>

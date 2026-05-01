@@ -1,0 +1,307 @@
+
+:root {
+  --color1: #44562F;
+  --color2: #b5c973;
+  --color3: #B7C88D;
+  --color4: #E9DFB4;
+  --color5: #EFBFB3;
+}
+
+/*
+
+color1 = bordes
+color2 = fondo
+color3 = 
+color4 = 
+color5 = botones
+
+*/
+
+.sidebar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  justify-items: center;
+  padding: 1%;
+  background: var(--color1);
+}
+
+.sidebarName {
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
+  color: var(--color5);
+  font-size: 14;
+  font-weight: bold;
+}
+
+.sidebarOptions {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.sidebarBottonOptions {
+  margin: 10px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--color5);
+  font-size: 14;
+  font-weight: bold;
+}
+
+.sidebarBottonOptions:hover {
+  color: #f3ccc2;
+}
+
+.sidebarBottonOptions:active {
+  transform: translate(1px, 1px);
+}
+
+.sidebarLogout {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.sidebarBottonLogout {
+  margin: 10px;
+  background: transparent;
+  border: 3px solid var(--color5);
+  border-radius: 7;
+  color: var(--color5);
+  font-size: 14;
+  font-weight: bold;
+}
+
+.sidebarBottonLogout:hover {
+  border: 3px solid #f3ccc2;
+  color: #f3ccc2;
+}
+
+.sidebarBottonLogout:active {
+  transform: translate(1px, 1px);
+}
+
+.main {
+  height: 98vh;
+  background: var(--color2);
+  margin-left: -0.7%;
+  margin-right: -0.7%;
+  margin-top: -0.7%;
+  margin-bottom: -0.7%;
+
+  font-size: 11;
+}
+
+.login {
+  background: var(--color1);
+  padding: 6% 3% 6%;
+}
+
+.titleLogin {
+  color: var(--color5);
+  text-align: center;
+  font-size: 32;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.divInput {
+  margin-bottom: 20px;
+  color: var(--color5);
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.inputText {
+  font-size: 16;
+}
+
+.input {
+  background: var(--color4);
+  border: 1px solid var(--color4);
+  border-radius: 6;
+  width: 50vh;
+  margin-top: 8px;
+  padding: 2% 1% 2%;
+}
+
+.bottonLogin {
+  width: 50vh;
+  margin: 6px 2px 2px;
+  padding: 6px;
+  background: transparent;
+  color: var(--color5);
+  border: 3px solid var(--color5);
+  border-radius: 5;
+  font-size: 16;
+  font-weight: bold;
+}
+
+.bottonLogin:hover {
+  color: #f3ccc2;
+  border: 3px solid #f3ccc2;
+}
+
+.bottonLogin:active {
+  transform: translate(2px, 1px);
+}
+
+.message {
+  color: #f3a996;
+  text-align: center;
+  font-size: 20;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.title {
+  color: var(--color1);
+  margin-left: 3%;
+  margin-top: 3%;
+  font-size: 26;
+  font-weight: bold;
+}
+
+.table {
+  max-width: 180vh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2%;
+  border-collapse: collapse;
+}
+
+.tableCells {
+  min-width: 70px;
+  padding: 4px;
+  border: 1px solid var(--color1);
+}
+
+.tableTitles {
+  font-size: 13;
+}
+
+.bottonCreate {
+  width: 30vh;
+  margin: 2px;
+  padding: 6px;
+  margin-left: 3%;
+  background: var(--color5);
+  border: 1px solid var(--color5);
+  border-radius: 5;
+  font-size: 16;
+  font-weight: bold;
+}
+
+.bottonCreate:hover {
+  color: #4d4a4a;
+}
+
+.bottonCreate:active {
+  background: #f3ccc2;
+  border: 1px solid #4d4a4a;
+  transform: translate(2px, 1px);
+}
+
+.botton {
+  margin: 2px;
+  background: var(--color5);
+  border: 1px solid var(--color5);
+  border-radius: 5;
+  font-size: 11;
+}
+
+.botton:hover {
+  color: #4d4a4a;
+}
+
+.botton:active {
+  background: #f3ccc2;
+  border: 1px solid #4d4a4a;
+  transform: translate(2px, 1px);
+}
+
+.bottonReturn {
+  margin: 1% 2% 1%;
+  padding: 0.5% 1% 0.5%;
+  background: var(--color5);
+  border: 1px solid #000;
+  border-radius: 5;
+  font-size: 16;
+}
+
+.bottonReturn:hover {
+  color: #4d4a4a;
+}
+
+.bottonReturn:active {
+  background: #f3ccc2;
+  border: 1px solid #4d4a4a;
+  transform: translate(2px, 1px);
+}
+
+.divInfo {
+  width: 35%;
+  max-height: 11%;
+  margin: 1% 2% 1%;
+  padding: 1% 2% 0.5%;
+  background: var(--color3);
+  border: 1.5px solid var(--color1);
+}
+
+.titleInfo {
+  font-size: 15;
+  font-weight: bold;
+}
+
+.textInfo {
+  font-size: 14;
+}
+
+.inputInfo {
+  margin: 2% 0 3%;
+  width: 60vh;
+  padding: 1%;
+  background: var(--color4);
+  border: 1px solid var(--color4);
+  border-radius: 6;
+}
+
+.textAreaInfo {
+  margin: 2% 0 3%;
+  width: 60vh;
+  height: 8vh;
+  padding: 1%;
+  background: var(--color4);
+  border: 1px solid var(--color4);
+  border-radius: 6;
+}
+
+.selectInfo {
+  margin-top: 1%;
+  margin-bottom: 2%;
+  padding: 1%;
+  background: var(--color4);
+  border: 1px solid var(--color4);
+  border-radius: 6;
+}
+
+.bottonInfo {
+  width: 40vh;
+  margin: 1% 2% 1%;
+  padding: 0.5% 1% 0.5%;
+  background: var(--color5);
+  border: 1px solid #000;
+  border-radius: 5;
+  font-size: 16;
+}
+
+.bottonInfo:hover {
+  color: #4d4a4a;
+}
+
+.bottonInfo:active {
+  background: #f3ccc2;
+  border: 1px solid #4d4a4a;
+  transform: translate(2px, 1px);
+}
+
